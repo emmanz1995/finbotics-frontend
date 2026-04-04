@@ -1,0 +1,32 @@
+@use './variables.module.scss' as *;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $body;
+  background-color: $background;
+  color: $primary;
+  line-height: 1.5;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: $heading;
+  font-weight: 600;
+  line-height: 1.2;
+}
+a {
+  color: $secondary;
+  text-decoration: none;
+  &:hover {
+    color: $primary;
+  }
+}
+button {
+  cursor: pointer;
+}
+input, button, select, textarea {
+  font-family: inherit;
+}
