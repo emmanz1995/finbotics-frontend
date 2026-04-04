@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ThemeProps } from '../../styles/themes';
+import { theme } from '@/app/styles/theme';
 
 export const StyledLayout = styled.main`
   width: 100%;
@@ -8,9 +8,9 @@ export const StyledLayout = styled.main`
   //}
 `;
 
-export const Main = styled.main<ThemeProps>`
+export const Main = styled.main`
   //margin-left: 16rem;
-  //padding: ${props => props.theme?.space?.md};
+  //padding: ${theme?.space?.md};
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
