@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import type { FC } from 'react';
@@ -127,8 +127,7 @@ const Dashboard: FC = () => {
 
   useEffect(() => {
     const getAccountDetail = async () => {
-      const response =
-        await service.getAccountsByAccId(accountId);
+      const response = await service.getAccountsByAccId(accountId);
       setDetail(response);
     };
     getAccountDetail();
@@ -166,10 +165,7 @@ const Dashboard: FC = () => {
     <Layout>
       <ContentContainer>
         <HeaderContent>
-          <Button
-            variant="ghost"
-            onClick={() => navigate.push('/dashboard')}
-          >
+          <Button variant="ghost" onClick={() => navigate.push('/dashboard')}>
             <ArrowLeft size={20} />
           </Button>
           <Title>Account Details</Title>

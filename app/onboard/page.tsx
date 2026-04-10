@@ -3,7 +3,7 @@ import React from 'react';
 const onBoard = () => {
   return (
     <div>
-      <h1>OnBoard</h1>
+      <h1>Onboard</h1>
     </div>
   );
 };

@@ -80,9 +80,7 @@ const AccountsDashboard: FC = () => {
 
   const fetchBalances = async () => {
     // TODO: update this with dynamic accountId pulled from currently logged in user
-    const balancesRes = await service.getAllBalances(
-      'c7d8ae51-589a-40cf-9d71-4c3300fe48b8'
-    );
+    const balancesRes = (await service.getAllBalances()) as BalanceProps;
     setBalances(balancesRes);
   };
 
@@ -103,12 +101,12 @@ const AccountsDashboard: FC = () => {
 
   const mapBalancesToAccount = () => {
     const balanceToReturn: BalanceToReturnProp = {};
-    const balanceToDetails = accountDetails?.map(
+    const mapBalanceToDetails = accountDetails?.map(
       (detail: AccountDetailsProps) => {
         balances.forEach((balance: BalanceProps) => {
           if (detail.id === balance.accountDetailsId) {
             // @ts-expect-error: balanceToReturn type does not match AccountDetailsProps.balance, will refactor type later
-            balanceToReturn[balance.accountDetailsId] = {
+            mapBalanceToDetails[balance.accountDetailsId] = {
               ...pickBalanceFields(balance),
             };
           }
@@ -166,7 +164,7 @@ const AccountsDashboard: FC = () => {
           <Button
             variant="primary"
             size="md"
-            onClick={() => navigate('/onboard-institution')}
+            onClick={() => navigate.push('/onboard')}
           >
             Connect Bank
           </Button>
@@ -209,7 +207,6 @@ const AccountsDashboard: FC = () => {
           </SummaryCard>
         </SummarySection>
         <AccountsGrid>
-          {/* @ts-expect-error: TODO:detail props does not match will refactor later */}
           {formattedDetails.map((detail: AccountDetailsProps) => (
             <AccountCard
               key={detail.id}

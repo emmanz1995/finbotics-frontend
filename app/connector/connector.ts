@@ -7,7 +7,7 @@ interface Options {
   data?: object;
 }
 
-const request = async (url: string, options?: Options) => {
+const request = async (url: string, options?: Options): Promise<object> => {
   const defaults = {
     method: 'GET',
     headers: {

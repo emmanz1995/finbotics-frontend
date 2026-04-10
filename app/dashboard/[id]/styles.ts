@@ -178,11 +178,9 @@ export const TransactionCategory = styled.span`
   margin-right: ${theme.space.md};
 `;
 export const TransactionDate = styled.span``;
-export const TransactionAmount = styled.div<
-  {
-    $type: 'credit' | 'debit';
-  }
->`
+export const TransactionAmount = styled.div<{
+  $type: 'credit' | 'debit';
+}>`
   font-weight: 600;
   color: ${({ $type, theme }: any) =>
     $type === 'credit' ? theme.colors?.success : theme.colors?.text?.primary};
