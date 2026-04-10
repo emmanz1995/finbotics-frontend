@@ -119,7 +119,7 @@ const AccountsDashboard: FC = () => {
       }
     );
 
-    return balanceToDetails;
+    return mapBalanceToDetails;
   };
 
   useEffect(() => {
