@@ -16,6 +16,7 @@ export const AccountCard = styled.div`
     transform: translateY(-4px);
     box-shadow: ${theme.shadows?.lg};
   }
+  cursor: pointer;
 `;
 export const AccountHeader = styled.div`
   display: flex;

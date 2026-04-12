@@ -49,10 +49,21 @@ interface CardProps {
   detail: AccountDetailsProps;
   handleAccountDataSync: (accountId: string) => Promise<void>;
   isLoading: boolean;
+  navigate: any;
+  handleGetAccountId: any;
 }
 
-const Card: FC<CardProps> = ({ detail, handleAccountDataSync, isLoading }) => (
-  <AccountCard>
+const Card: FC<CardProps> = ({
+  detail,
+  handleAccountDataSync,
+  isLoading,
+  navigate,
+  handleGetAccountId,
+}) => (
+  <AccountCard
+    onDoubleClick={() => navigate.push(`/dashboard/${detail.id}`)}
+    onClick={() => handleGetAccountId(detail.id)}
+  >
     <AccountHeader>
       <AccountInfo>
         <AccountName>{detail.currency} Account</AccountName>
@@ -80,20 +91,20 @@ const Card: FC<CardProps> = ({ detail, handleAccountDataSync, isLoading }) => (
       <AccountOwner href={`/dashboard/${detail.id}`}>
         {detail.ownerName}
       </AccountOwner>
-      <span>
-        <Button
-          data-testid="test-refresh-btn"
-          variant="outline"
-          size="sm"
-          isLoading={isLoading}
-          onClick={() => handleAccountDataSync(detail?.id)}
-        >
-          <RefreshCcwIcon cursor="pointer" />
-        </Button>{' '}
-        <Button variant="outline" size="sm" data-testid="test-del-btn">
-          <TrashIcon cursor="pointer" />
-        </Button>
-      </span>
+      {/*<span>*/}
+      {/*  <Button*/}
+      {/*    data-testid="test-refresh-btn"*/}
+      {/*    variant="outline"*/}
+      {/*    size="sm"*/}
+      {/*    isLoading={isLoading}*/}
+      {/*    onClick={() => handleAccountDataSync(detail?.id)}*/}
+      {/*  >*/}
+      {/*    <RefreshCcwIcon cursor="pointer" />*/}
+      {/*  </Button>{' '}*/}
+      {/*  <Button variant="outline" size="sm" data-testid="test-del-btn">*/}
+      {/*    <TrashIcon cursor="pointer" />*/}
+      {/*  </Button>*/}
+      {/*</span>*/}
     </AccountFooter>
   </AccountCard>
 );

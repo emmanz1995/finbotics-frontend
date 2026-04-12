@@ -7,6 +7,9 @@ import {
   CreditCardIcon,
   TrendingUpIcon,
   AlertCircleIcon,
+  RefreshCcwIcon,
+  TrashIcon,
+  EditIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/app/components/template';
@@ -68,6 +71,9 @@ const AccountsDashboard: FC = () => {
   );
   const [balances, setBalances] = useState<BalanceProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [cardIndex, setCardIndex] = useState<number>(0);
+  const [accountId, setAccountId] = useState<string>('');
+  const [showHide, setShowHide] = useState<boolean>(false);
 
   const navigate = useRouter();
 
@@ -132,24 +138,43 @@ const AccountsDashboard: FC = () => {
   const formattedDetails = mapBalancesToAccount();
 
   const handleAccountDataSync = async (accountId: string): Promise<void> => {
-    setLoading(false);
-    try {
-      setLoading(true);
-      await accountsConnector.onIngestAccountData(accountId);
-      await fetchAccountDetails();
-      await fetchBalances();
-      setLoading(false);
-    } catch (err: Error | unknown) {
-      if (typeof err === 'object' && err !== null && 'message' in err) {
-        console.log('Failed to sync bank data:', err.message);
-      }
-      // this is for debugging purposes, this will be cleared later on
-      console.log('...err', err);
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
+    // TODO: add the logic back in to refesh account data
+    // setLoading(false);
+    // try {
+    //   setLoading(true);
+    //   await accountsConnector.onIngestAccountData(accountId);
+    //   await fetchAccountDetails();
+    //   await fetchBalances();
+    //   setLoading(false);
+    // } catch (err: Error | unknown) {
+    //   if (typeof err === 'object' && err !== null && 'message' in err) {
+    //     console.log('Failed to sync bank data:', err.message);
+    //   }
+    //   // this is for debugging purposes, this will be cleared later on
+    //   console.log('...err', err);
+    //   setLoading(false);
+    // } finally {
+    //   setLoading(false);
+    // }
+    console.log(`refreshed account ${accountId}`);
   };
+
+  // TODO: add the logic in to delete account detail
+  const handleDeleteAccount = (id: string) => {
+    console.log(`deleted account ${id}`);
+  };
+
+  // TODO: add the logic in to edit account detail
+  const handleEditAccount = (id, name) => {
+    console.log(
+      `Edited the name of the account to: ${name} with accountId ${id}`
+    );
+  };
+
+  const handleCatchAccountId = (id: string) => {
+    setAccountId(id);
+  };
+  console.log(`Got account ${accountId}!`);
 
   return (
     <Layout>
@@ -169,6 +194,40 @@ const AccountsDashboard: FC = () => {
             Connect Bank
           </Button>
         </PageHeader>
+        {accountId && (
+          <span>
+            <Button
+              data-testid="test-refresh-btn"
+              variant="outline"
+              size="sm"
+              // isLoading={isLoading}
+              onClick={() => handleAccountDataSync(accountId)}
+            >
+              <RefreshCcwIcon cursor="pointer" />
+            </Button>{' '}
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="test-del-btn"
+              onClick={() => handleDeleteAccount(accountId)}
+            >
+              <TrashIcon cursor="pointer" />
+            </Button>{' '}
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="test-del-btn"
+              onClick={() => handleDeleteAccount(accountId)}
+            >
+              <EditIcon
+                cursor="pointer"
+                onClick={() =>
+                  handleEditAccount(accountId, 'Emmanuel C Okuchukwu')
+                }
+              />
+            </Button>
+          </span>
+        )}
         <SummarySection>
           <SummaryCard>
             <SummaryHeader>
@@ -207,14 +266,18 @@ const AccountsDashboard: FC = () => {
           </SummaryCard>
         </SummarySection>
         <AccountsGrid>
-          {formattedDetails.map((detail: AccountDetailsProps) => (
-            <AccountCard
-              key={detail.id}
-              detail={detail}
-              handleAccountDataSync={handleAccountDataSync}
-              isLoading={loading}
-            />
-          ))}
+          {formattedDetails.map(
+            (detail: AccountDetailsProps, index: number) => (
+              <AccountCard
+                key={detail.id}
+                detail={detail}
+                handleAccountDataSync={handleAccountDataSync}
+                isLoading={loading}
+                navigate={navigate}
+                handleGetAccountId={handleCatchAccountId}
+              />
+            )
+          )}
           <ConnectBankCard>
             <ConnectBankIcon>
               <PlusCircleIcon size={30} />

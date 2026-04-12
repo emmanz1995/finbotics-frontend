@@ -5,7 +5,7 @@
  */
 export const extractAccountNumber = (
   scan: string
-): { accountNumber: string; sortCode: string; } => {
+): { accountNumber: string; sortCode: string } => {
   if (!/^\d{14}$/.test(scan)) return { accountNumber: '', sortCode: '' };
 
   const sortCodeRaw = scan?.slice(0, 6);
