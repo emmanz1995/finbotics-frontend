@@ -56,7 +56,6 @@ interface CardProps {
 
 const Card: FC<CardProps> = ({
   detail,
-  // handleAccountDataSync,
   isLoading,
   navigate,
   handleGetAccountId,
