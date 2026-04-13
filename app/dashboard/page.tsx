@@ -1,39 +1,40 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  PlusCircleIcon,
-  CreditCardIcon,
-  TrendingUpIcon,
   AlertCircleIcon,
+  CreditCardIcon,
+  EditIcon,
+  PlusCircleIcon,
   RefreshCcwIcon,
   TrashIcon,
-  EditIcon,
+  TrendingUpIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/app/components/template';
 import Button from '@/app/components/atoms/button';
 import {
-  PageHeader,
-  HeaderContent,
-  Title,
-  Subtitle,
-  SummarySection,
-  SummaryCard,
-  SummaryHeader,
-  SummaryTitle,
-  SummaryValue,
-  Currency,
-  SummaryDescription,
   AccountsGrid,
   ConnectBankCard,
   ConnectBankDescription,
   ConnectBankIcon,
   ConnectBankTitle,
   ContentContainer,
+  Currency,
+  HeaderContent,
+  PageHeader,
+  Subtitle,
+  SummaryCard,
+  SummaryDescription,
+  SummaryHeader,
+  SummarySection,
+  SummaryTitle,
+  SummaryValue,
+  Title,
 } from './styles';
 import { service } from '@/app/services/accounts';
+import { service as balanceService } from '@/app/services/balances';
 import AccountCard from '@/app/components/molecules/accountCard';
 import { pickBalanceFields } from '@/app/helpers';
 
@@ -71,61 +72,43 @@ const AccountsDashboard: FC = () => {
   );
   const [balances, setBalances] = useState<BalanceProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [cardIndex, setCardIndex] = useState<number>(0);
-  const [accountId, setAccountId] = useState<string>('');
-  const [showHide, setShowHide] = useState<boolean>(false);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>('');
 
   const navigate = useRouter();
 
   const fetchAccountDetails = async () => {
-    const details: AccountDetailsProps[] = await service.getAccounts();
+    setLoading(true);
+    const details = (await service.getAccounts()) as AccountDetailsProps[];
     console.log('...details', details);
-
     setAccountDetails(details);
+    setLoading(false);
   };
 
   const fetchBalances = async () => {
     // TODO: update this with dynamic accountId pulled from currently logged in user
-    const balancesRes = (await service.getAllBalances()) as BalanceProps;
+    const balancesRes =
+      (await balanceService.getAllBalances()) as BalanceProps[];
     setBalances(balancesRes);
   };
 
-  // const groupBalancesByAccountId = accountDetails.reduce(
-  //   (acc: any, detail: any) => {
-  //     let accountId;
-  //     if (typeof detail === 'object' && 'accountDetailsId' in detail && detail)
-  //       accountId = detail?.accountDetailsId ?? 'Not Found';
-  //     if (!acc[accountId]) {
-  //       acc[accountId] = {};
-  //     }
-  //     acc[accountId].push(detail);
-  //     return acc;
-  //   },
-  //   {} as Record<string, []>
-  // );
-  // console.log('...groupBalancesByAccountId', groupBalancesByAccountId);
-
   const mapBalancesToAccount = () => {
     const balanceToReturn: BalanceToReturnProp = {};
-    const mapBalanceToDetails = accountDetails?.map(
-      (detail: AccountDetailsProps) => {
-        balances.forEach((balance: BalanceProps) => {
-          if (detail.id === balance.accountDetailsId) {
-            // @ts-expect-error: balanceToReturn type does not match AccountDetailsProps.balance, will refactor type later
-            mapBalanceToDetails[balance.accountDetailsId] = {
-              ...pickBalanceFields(balance),
-            };
-          }
-        });
 
-        return {
-          ...detail,
-          balance: balanceToReturn,
-        };
-      }
-    );
+    return accountDetails?.map((detail: AccountDetailsProps) => {
+      balances.forEach((balance: BalanceProps) => {
+        if (detail.id === balance.accountDetailsId) {
+          // @ts-expect-error: balanceToReturn type does not match AccountDetailsProps.balance, will refactor type later
+          balanceToReturn[balance.accountDetailsId] = {
+            ...pickBalanceFields(balance),
+          };
+        }
+      });
 
-    return mapBalanceToDetails;
+      return {
+        ...detail,
+        balance: balanceToReturn,
+      };
+    });
   };
 
   useEffect(() => {
@@ -137,44 +120,46 @@ const AccountsDashboard: FC = () => {
   }, []);
   const formattedDetails = mapBalancesToAccount();
 
-  const handleAccountDataSync = async (accountId: string): Promise<void> => {
+  const handleAccountDataSync = async (
+    accountId: string | null
+  ): Promise<void> => {
     // TODO: add the logic back in to refesh account data
-    // setLoading(false);
-    // try {
-    //   setLoading(true);
-    //   await accountsConnector.onIngestAccountData(accountId);
-    //   await fetchAccountDetails();
-    //   await fetchBalances();
-    //   setLoading(false);
-    // } catch (err: Error | unknown) {
-    //   if (typeof err === 'object' && err !== null && 'message' in err) {
-    //     console.log('Failed to sync bank data:', err.message);
-    //   }
-    //   // this is for debugging purposes, this will be cleared later on
-    //   console.log('...err', err);
-    //   setLoading(false);
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(false);
+    try {
+      setLoading(true);
+      await service.onSyncAccount(accountId);
+      await fetchAccountDetails();
+      await fetchBalances();
+      setLoading(false);
+    } catch (err: Error | unknown) {
+      if (typeof err === 'object' && err !== null && 'message' in err) {
+        console.log('Failed to sync bank data:', err.message);
+      }
+      // this is for debugging purposes, this will be cleared later on
+      console.log('...err', err);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
     console.log(`refreshed account ${accountId}`);
   };
 
   // TODO: add the logic in to delete account detail
-  const handleDeleteAccount = (id: string) => {
+  const handleDeleteAccount = (id: string | null) => {
     console.log(`deleted account ${id}`);
   };
 
   // TODO: add the logic in to edit account detail
-  const handleEditAccount = (id, name) => {
+  const handleEditAccount = (id: string | null, name: string) => {
     console.log(
       `Edited the name of the account to: ${name} with accountId ${id}`
     );
   };
 
-  const handleCatchAccountId = (id: string) => {
-    setAccountId(id);
-  };
-  console.log(`Got account ${accountId}!`);
+  const handleCatchAccountId = (id: string) =>
+    setSelectedAccountId(prev => (prev === id ? null : id));
+
+  console.log(`Got account ${selectedAccountId}!`);
 
   return (
     <Layout>
@@ -194,14 +179,14 @@ const AccountsDashboard: FC = () => {
             Connect Bank
           </Button>
         </PageHeader>
-        {accountId && (
+        {selectedAccountId && (
           <span>
             <Button
               data-testid="test-refresh-btn"
               variant="outline"
               size="sm"
               // isLoading={isLoading}
-              onClick={() => handleAccountDataSync(accountId)}
+              onClick={() => handleAccountDataSync(selectedAccountId)}
             >
               <RefreshCcwIcon cursor="pointer" />
             </Button>{' '}
@@ -209,7 +194,7 @@ const AccountsDashboard: FC = () => {
               variant="outline"
               size="sm"
               data-testid="test-del-btn"
-              onClick={() => handleDeleteAccount(accountId)}
+              onClick={() => handleDeleteAccount(selectedAccountId)}
             >
               <TrashIcon cursor="pointer" />
             </Button>{' '}
@@ -217,12 +202,12 @@ const AccountsDashboard: FC = () => {
               variant="outline"
               size="sm"
               data-testid="test-del-btn"
-              onClick={() => handleDeleteAccount(accountId)}
+              onClick={() => handleDeleteAccount(selectedAccountId)}
             >
               <EditIcon
                 cursor="pointer"
                 onClick={() =>
-                  handleEditAccount(accountId, 'Emmanuel C Okuchukwu')
+                  handleEditAccount(selectedAccountId, 'Emmanuel C Okuchukwu')
                 }
               />
             </Button>
@@ -265,35 +250,40 @@ const AccountsDashboard: FC = () => {
             <SummaryDescription>Due in the next 7 days</SummaryDescription>
           </SummaryCard>
         </SummarySection>
-        <AccountsGrid>
-          {formattedDetails.map(
-            (detail: AccountDetailsProps, index: number) => (
+        {loading ? (
+          <h4>Loading...</h4>
+        ) : (
+          <AccountsGrid>
+            {formattedDetails.map((detail: AccountDetailsProps) => (
               <AccountCard
                 key={detail.id}
                 detail={detail}
-                handleAccountDataSync={handleAccountDataSync}
                 isLoading={loading}
                 navigate={navigate}
-                handleGetAccountId={handleCatchAccountId}
+                handleGetAccountId={() => handleCatchAccountId(detail.id)}
+                isAccountIdSelected={selectedAccountId === detail.id}
               />
-            )
-          )}
-          <ConnectBankCard>
-            <ConnectBankIcon>
-              <PlusCircleIcon size={30} />
-            </ConnectBankIcon>
-            <ConnectBankTitle>Connect a New Bank</ConnectBankTitle>
-            <ConnectBankDescription>
-              Add another bank account to get a complete view of your finances
-            </ConnectBankDescription>
-            <Button
-              variant="primary"
-              onClick={() => navigate.push('/onboard-institution')}
-            >
-              Connect Bank
-            </Button>
-          </ConnectBankCard>
-        </AccountsGrid>
+            ))}
+            <ConnectBankCard>
+              <ConnectBankIcon>
+                <PlusCircleIcon size={30} />
+              </ConnectBankIcon>
+              <ConnectBankTitle>Connect a New Bank</ConnectBankTitle>
+              <ConnectBankDescription>
+                Add another bank account to get a complete view of your finances
+              </ConnectBankDescription>
+              <Button
+                variant="primary"
+                onClick={evt => {
+                  evt.stopPropagation();
+                  navigate.push('/onboard-institution');
+                }}
+              >
+                Connect Bank
+              </Button>
+            </ConnectBankCard>
+          </AccountsGrid>
+        )}
       </ContentContainer>
     </Layout>
   );

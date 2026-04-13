@@ -2,11 +2,13 @@
 import styled from 'styled-components';
 import { theme } from '@/app/styles/theme';
 
-export const AccountCard = styled.div`
-  background-color: white;
+export const AccountCard = styled.div<{ isAccountIdSelected: boolean }>`
+  background-color: ${({ isAccountIdSelected }) =>
+    isAccountIdSelected ? 'grey' : 'white'};
   border-radius: ${theme.radii?.lg};
   box-shadow: ${theme.shadows?.md};
   padding: 1.5rem;
+
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;

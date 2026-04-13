@@ -47,22 +47,25 @@ export interface AccountDetailsProps {
 
 interface CardProps {
   detail: AccountDetailsProps;
-  handleAccountDataSync: (accountId: string) => Promise<void>;
+  // handleAccountDataSync: (accountId: string) => Promise<void>;
   isLoading: boolean;
   navigate: any;
   handleGetAccountId: any;
+  isAccountIdSelected: boolean;
 }
 
 const Card: FC<CardProps> = ({
   detail,
-  handleAccountDataSync,
+  // handleAccountDataSync,
   isLoading,
   navigate,
   handleGetAccountId,
+  isAccountIdSelected,
 }) => (
   <AccountCard
+    isAccountIdSelected={isAccountIdSelected}
     onDoubleClick={() => navigate.push(`/dashboard/${detail.id}`)}
-    onClick={() => handleGetAccountId(detail.id)}
+    onClick={handleGetAccountId}
   >
     <AccountHeader>
       <AccountInfo>
@@ -91,20 +94,6 @@ const Card: FC<CardProps> = ({
       <AccountOwner href={`/dashboard/${detail.id}`}>
         {detail.ownerName}
       </AccountOwner>
-      {/*<span>*/}
-      {/*  <Button*/}
-      {/*    data-testid="test-refresh-btn"*/}
-      {/*    variant="outline"*/}
-      {/*    size="sm"*/}
-      {/*    isLoading={isLoading}*/}
-      {/*    onClick={() => handleAccountDataSync(detail?.id)}*/}
-      {/*  >*/}
-      {/*    <RefreshCcwIcon cursor="pointer" />*/}
-      {/*  </Button>{' '}*/}
-      {/*  <Button variant="outline" size="sm" data-testid="test-del-btn">*/}
-      {/*    <TrashIcon cursor="pointer" />*/}
-      {/*  </Button>*/}
-      {/*</span>*/}
     </AccountFooter>
   </AccountCard>
 );
