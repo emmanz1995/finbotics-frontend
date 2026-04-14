@@ -1,10 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  sassOptions: { 
-    // implementation: 'sass-embedded' 
-  }
+  compiler: {
+    styledComponents: true,
+  },
+  sassOptions: {}
 };
 
 export default nextConfig;

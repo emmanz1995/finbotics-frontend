@@ -43,7 +43,6 @@ export interface BalanceToReturnProp {
     id: string;
     amount: number;
     currency: string;
-    type: string;
     metadata: object;
     accountDetailsId: string;
   };
@@ -52,7 +51,6 @@ export interface BalanceProps {
   id: string;
   amount: number;
   currency: string;
-  type: string;
   metadata: object;
   accountDetailsId: string;
 }
@@ -63,7 +61,7 @@ export interface AccountDetailsProps {
   scan: string;
   currency: string;
   ownerName: string;
-  balance: BalanceProps[] | any;
+  balance: BalanceProps[];
 }
 
 const AccountsDashboard: FC = () => {
@@ -79,7 +77,6 @@ const AccountsDashboard: FC = () => {
   const fetchAccountDetails = async () => {
     setLoading(true);
     const details = (await service.getAccounts()) as AccountDetailsProps[];
-    console.log('...details', details);
     setAccountDetails(details);
     setLoading(false);
   };
@@ -103,12 +100,11 @@ const AccountsDashboard: FC = () => {
           };
         }
       });
-
       return {
         ...detail,
         balance: balanceToReturn,
       };
-    });
+    });2
   };
 
   useEffect(() => {
@@ -141,25 +137,20 @@ const AccountsDashboard: FC = () => {
     } finally {
       setLoading(false);
     }
-    console.log(`refreshed account ${accountId}`);
   };
 
   // TODO: add the logic in to delete account detail
-  const handleDeleteAccount = (id: string | null) => {
+  const handleDeleteAccount = (id: string | null) =>
     console.log(`deleted account ${id}`);
-  };
 
   // TODO: add the logic in to edit account detail
-  const handleEditAccount = (id: string | null, name: string) => {
+  const handleEditAccount = (id: string | null, name: string) =>
     console.log(
       `Edited the name of the account to: ${name} with accountId ${id}`
     );
-  };
 
   const handleCatchAccountId = (id: string) =>
     setSelectedAccountId(prev => (prev === id ? null : id));
-
-  console.log(`Got account ${selectedAccountId}!`);
 
   return (
     <Layout>
@@ -202,14 +193,11 @@ const AccountsDashboard: FC = () => {
               variant="outline"
               size="sm"
               data-testid="test-del-btn"
-              onClick={() => handleDeleteAccount(selectedAccountId)}
+              onClick={() =>
+                handleEditAccount(selectedAccountId, 'Emmanuel C Okuchukwu')
+              }
             >
-              <EditIcon
-                cursor="pointer"
-                onClick={() =>
-                  handleEditAccount(selectedAccountId, 'Emmanuel C Okuchukwu')
-                }
-              />
+              <EditIcon cursor="pointer" />
             </Button>
           </span>
         )}
@@ -254,11 +242,10 @@ const AccountsDashboard: FC = () => {
           <h4>Loading...</h4>
         ) : (
           <AccountsGrid>
-            {formattedDetails.map((detail: AccountDetailsProps) => (
+            {formattedDetails.map(detail => (
               <AccountCard
                 key={detail.id}
                 detail={detail}
-                isLoading={loading}
                 navigate={navigate}
                 handleGetAccountId={() => handleCatchAccountId(detail.id)}
                 isAccountIdSelected={selectedAccountId === detail.id}

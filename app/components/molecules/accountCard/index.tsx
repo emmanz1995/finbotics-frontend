@@ -47,8 +47,6 @@ export interface AccountDetailsProps {
 
 interface CardProps {
   detail: AccountDetailsProps;
-  // handleAccountDataSync: (accountId: string) => Promise<void>;
-  isLoading: boolean;
   navigate: any;
   handleGetAccountId: any;
   isAccountIdSelected: boolean;
@@ -56,7 +54,6 @@ interface CardProps {
 
 const Card: FC<CardProps> = ({
   detail,
-  isLoading,
   navigate,
   handleGetAccountId,
   isAccountIdSelected,

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+// import Head from 'next/head';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './styles/global.scss';
 import { GlobalStyles } from '@/app/styles/Global-Styles';
+import StyledComponentsRegistry from '@/lib/styled-components-registry';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -25,8 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <GlobalStyles />
-      <body>{children}</body>
+      <StyledComponentsRegistry>
+        <GlobalStyles />
+        <body>{children}</body>
+      </StyledComponentsRegistry>
     </html>
   );
 }
