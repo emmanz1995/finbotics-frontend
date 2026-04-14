@@ -1,6 +1,7 @@
 'use client';
 
 import type { FC } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import {
   AlertCircleIcon,
@@ -74,12 +75,21 @@ const AccountsDashboard: FC = () => {
 
   const navigate = useRouter();
 
-  const fetchAccountDetails = async () => {
-    setLoading(true);
-    const details = (await service.getAccounts()) as AccountDetailsProps[];
-    setAccountDetails(details);
-    setLoading(false);
-  };
+  useEffect(() => {
+    let isMounted: boolean = true;
+    const fetchAccountDetails = async () => {
+      setLoading(true);
+      const details = (await service.getAccounts()) as AccountDetailsProps[];
+      if (isMounted) {
+        setAccountDetails(details);
+        setLoading(false);
+      }
+    };
+    fetchAccountDetails();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const fetchBalances = async () => {
     // TODO: update this with dynamic accountId pulled from currently logged in user
@@ -88,10 +98,9 @@ const AccountsDashboard: FC = () => {
     setBalances(balancesRes);
   };
 
-  const mapBalancesToAccount = () => {
-    const balanceToReturn: BalanceToReturnProp = {};
-
+  const formattedDetails = useMemo(() => {
     return accountDetails?.map((detail: AccountDetailsProps) => {
+      const balanceToReturn: BalanceToReturnProp = {};
       balances.forEach((balance: BalanceProps) => {
         if (detail.id === balance.accountDetailsId) {
           // @ts-expect-error: balanceToReturn type does not match AccountDetailsProps.balance, will refactor type later
@@ -104,17 +113,12 @@ const AccountsDashboard: FC = () => {
         ...detail,
         balance: balanceToReturn,
       };
-    });2
-  };
-
-  useEffect(() => {
-    fetchAccountDetails();
-  }, []);
+    });
+  }, [accountDetails, balances]);
 
   useEffect(() => {
     fetchBalances();
   }, []);
-  const formattedDetails = mapBalancesToAccount();
 
   const handleAccountDataSync = async (
     accountId: string | null
@@ -124,7 +128,6 @@ const AccountsDashboard: FC = () => {
     try {
       setLoading(true);
       await service.onSyncAccount(accountId);
-      await fetchAccountDetails();
       await fetchBalances();
       setLoading(false);
     } catch (err: Error | unknown) {
@@ -149,8 +152,9 @@ const AccountsDashboard: FC = () => {
       `Edited the name of the account to: ${name} with accountId ${id}`
     );
 
-  const handleCatchAccountId = (id: string) =>
+  const handleCatchAccountId = useCallback((id: string) => {
     setSelectedAccountId(prev => (prev === id ? null : id));
+  }, [])
 
   return (
     <Layout>

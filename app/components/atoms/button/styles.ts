@@ -83,9 +83,9 @@ const chooseSize = (size?: string) => {
 };
 
 export const StyledButton = styled.button<{
-  variant: string;
-  size?: string;
-  fullWidth?: string;
+  $variant: string;
+  $size?: string;
+  $fullWidth?: string;
   theme?: Props;
 }>`
   display: inline-flex;
@@ -96,13 +96,13 @@ export const StyledButton = styled.button<{
   border-radius: 0.25rem;
   transition: 0.2s;
   cursor: pointer;
-  ${({ size }) => {
-    return chooseSize(size);
+  ${({ $size }) => {
+    return chooseSize($size);
   }}
-  ${({ variant }) => {
-    return chooseVariant(variant, theme);
+  ${({ $variant }) => {
+    return chooseVariant($variant, theme);
   }}
-   width: ${props => (props.fullWidth === 'full' ? '100%' : 'auto')};
+   width: ${({ $fullWidth }) => ($fullWidth === 'full' ? '100%' : 'auto')};
 `;
 
 export const LoadingSpinner = styled.div<{ theme: Props }>`

@@ -59,7 +59,7 @@ const Card: FC<CardProps> = ({
   isAccountIdSelected,
 }) => (
   <AccountCard
-    isAccountIdSelected={isAccountIdSelected}
+    $isAccountIdSelected={isAccountIdSelected}
     onDoubleClick={() => navigate.push(`/dashboard/${detail.id}`)}
     onClick={handleGetAccountId}
   >
