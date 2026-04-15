@@ -2,21 +2,10 @@
 
 import type { Metadata } from 'next';
 // import Head from 'next/head';
-import { Geist, Geist_Mono } from 'next/font/google';
-import { ThemeProvider} from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from '@/app/styles/Global-Styles';
 import StyledComponentsRegistry from '@/lib/styled-components-registry';
 import { theme } from '@/app/styles/theme';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   title: 'Create Next App',

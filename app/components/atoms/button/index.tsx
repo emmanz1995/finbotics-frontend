@@ -21,7 +21,12 @@ const Button: FC<ButtonProps> = ({
   ...rest
 }) => {
   return (
-    <StyledButton $variant={variant} $size={size} $fullWidth={fullWidth} {...rest}>
+    <StyledButton
+      $variant={variant}
+      $size={size}
+      $fullWidth={fullWidth}
+      {...rest}
+    >
       {rest.isLoading ? (
         <>
           <LoadingSpinner /> Please wait

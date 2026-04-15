@@ -72,6 +72,7 @@ const AccountsDashboard: FC = () => {
   const [balances, setBalances] = useState<BalanceProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>('');
+  const [message, setMessage] = useState<string>('');
 
   const navigate = useRouter();
 
@@ -123,19 +124,17 @@ const AccountsDashboard: FC = () => {
   const handleAccountDataSync = async (
     accountId: string | null
   ): Promise<void> => {
-    // TODO: add the logic back in to refesh account data
     setLoading(false);
     try {
       setLoading(true);
       await service.onSyncAccount(accountId);
       await fetchBalances();
       setLoading(false);
+      setMessage('Successfully resynced your Account');
     } catch (err: Error | unknown) {
       if (typeof err === 'object' && err !== null && 'message' in err) {
         console.log('Failed to sync bank data:', err.message);
       }
-      // this is for debugging purposes, this will be cleared later on
-      console.log('...err', err);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -154,7 +153,7 @@ const AccountsDashboard: FC = () => {
 
   const handleCatchAccountId = useCallback((id: string) => {
     setSelectedAccountId(prev => (prev === id ? null : id));
-  }, [])
+  }, []);
 
   return (
     <Layout>
@@ -180,7 +179,6 @@ const AccountsDashboard: FC = () => {
               data-testid="test-refresh-btn"
               variant="outline"
               size="sm"
-              // isLoading={isLoading}
               onClick={() => handleAccountDataSync(selectedAccountId)}
             >
               <RefreshCcwIcon cursor="pointer" />

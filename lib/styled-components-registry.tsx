@@ -1,4 +1,3 @@
-// lib/styled-components-registry.tsx
 'use client';
 
 import React, { useState } from 'react';
