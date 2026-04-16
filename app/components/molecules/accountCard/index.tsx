@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { CreditCardIcon, TrashIcon, RefreshCcwIcon } from 'lucide-react';
+import { CreditCardIcon } from 'lucide-react';
 import {
   AccountCard,
   AccountHeader,
@@ -14,7 +14,6 @@ import {
   AccountOwner,
   Currency,
 } from './styles';
-import Button from '@/app/components/atoms/button';
 
 export interface BalanceToReturnProp {
   [key: string]: {
@@ -62,6 +61,7 @@ const Card: FC<CardProps> = ({
     $isAccountIdSelected={isAccountIdSelected}
     onDoubleClick={() => navigate.push(`/dashboard/${detail.id}`)}
     onClick={handleGetAccountId}
+    data-testid="test-card-btn"
   >
     <AccountHeader>
       <AccountInfo>

@@ -83,7 +83,7 @@ const OnBoard: FC = () => {
           </p>
         </Heading>
         <MainContainer>
-          <GridDisplay>
+          <GridDisplay data-testid="main-container">
             {loading ? (
               <p>Loading...</p>
             ) : (
@@ -95,6 +95,7 @@ const OnBoard: FC = () => {
                     isSelected={institution.id === selectedId}
                     institution={institution}
                     handleConnectBank={() => handleConnectBank()}
+                    data-testid="institution-card"
                   />
                 ))}
               </>

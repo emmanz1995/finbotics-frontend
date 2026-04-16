@@ -19,14 +19,20 @@ const Card: FC<CardProps> = ({
   handleConnectBank,
   onSelectBank,
 }) => (
-  <StyledCard $isSelected={isSelected} onClick={onSelectBank}>
+  <StyledCard
+    $isSelected={isSelected}
+    onClick={onSelectBank}
+    data-testid="bank-card-btn"
+  >
     <BankLogo
       src={institution.logo}
       alt={institution.name}
       width={50}
       height={50}
-    /><br />
-    {institution.name}<br />
+    />
+    <br />
+    <h3>{institution.name}</h3>
+    <br />
     {isSelected && (
       <Button variant="outline" onClick={handleConnectBank}>
         Connect Bank
