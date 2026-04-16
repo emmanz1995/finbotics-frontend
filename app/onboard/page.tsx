@@ -17,18 +17,6 @@ const GridDisplay = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 10px;
 `;
-// const Card = styled.div<{ $isSelected: boolean }>`
-//   padding: 1rem;
-//   background-color: #6b7280;
-//   cursor: pointer;
-// `;
-//
-// const BankLogo = styled(Image)`
-//   height: 50px;
-//   width: auto;
-//   object-fit: contain;
-//   margin-bottom: 1rem;
-// `;
 
 const OnBoard: FC = () => {
   const [institutions, setInstitutions] = useState<any[]>([]);
