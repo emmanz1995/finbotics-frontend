@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
 import Layout from '@/app/components/template';
 import { Institutions } from '@/app/helpers';
-import Button from '@/app/components/atoms/button';
 import { service } from '@/app/services/onboard';
 import Card from '@/app/components/molecules/card';
 
