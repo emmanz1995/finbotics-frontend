@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { StyledButton, LoadingSpinner } from './styles';
+import { StyledButton, LoadingSpinner } from './button.styled';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';

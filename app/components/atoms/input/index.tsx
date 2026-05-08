@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import './styles.scss';
+import { IconWrapper, InputWrapper, InputContainer, StyledInput, Label, ErrorMessage } from './input.styled';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -12,11 +12,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, fullWidth, leftIcon, rightIcon, ...rest }, ref) => {
     return (
-      <div className="input-container">
-        {label && <label>{label}</label>}
-        <div className="input-wrapper">
-          {leftIcon && <div className="icon-wrapper">{leftIcon}</div>}
-          <input
+      <InputContainer>
+        {label && <Label>{label}</Label>}
+        <InputWrapper>
+          {leftIcon && (
+            <IconWrapper $position={leftIcon}>{leftIcon}</IconWrapper>
+          )}
+          <StyledInput
             className="input"
             ref={ref}
             // hasError={!!error}
@@ -24,10 +26,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             // hasRightIcon={!!rightIcon}
             {...rest}
           />
-          {rightIcon && <div className="icon-wrapper">{rightIcon}</div>}
-        </div>
-        {/* {error && <ErrorMessage>{error}</ErrorMessage>} */}
-      </div>
+          {rightIcon && (
+            <IconWrapper $position={rightIcon}>{rightIcon}</IconWrapper>
+          )}
+        </InputWrapper>
+         {error && <ErrorMessage>{error}</ErrorMessage>}
+      </InputContainer>
     );
   }
 );

@@ -2,19 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
-import styled from 'styled-components';
 import Layout from '@/app/components/template';
 import { Institutions } from '@/app/helpers';
 import { service } from '@/app/services/onboard';
 import Card from '@/app/components/molecules/card';
-
-const Heading = styled.div``;
-const MainContainer = styled.div``;
-const GridDisplay = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 10px;
-`;
+import { Heading, MainContainer, GridDisplay } from './onboard.styled';
+import Input from '@/app/components/atoms/input';
 
 const OnBoard: FC = () => {
   const [institutions, setInstitutions] = useState<any[]>([]);
@@ -67,6 +60,7 @@ const OnBoard: FC = () => {
             Select your bank to securely connect your accounts. We use
             bank-level security to keep your information safe.
           </p>
+          <Input />
         </Heading>
         <MainContainer>
           <GridDisplay data-testid="main-container">
