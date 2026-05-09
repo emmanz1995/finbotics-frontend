@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { blogPosts } from '@/app/helpers';
 import Button from '@/app/components/atoms/button';
 
@@ -33,7 +33,7 @@ const Carousel = () => {
   useEffect(() => {
     const handleSetPosts = () => {
       setPosts(blogPosts);
-    }
+    };
 
     handleSetPosts();
   }, []);
@@ -42,7 +42,7 @@ const Carousel = () => {
     // add your logic here
 
     console.log(currentIndex);
-  }
+  };
 
   const handleClickPrevIndex = () => {
     // add your logic here

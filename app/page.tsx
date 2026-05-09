@@ -33,15 +33,13 @@ export default function Home() {
     const handleMovement = (evt: MouseEvent) => {
       setMousePosition({
         x: evt.clientX,
-        y: evt.clientY
+        y: evt.clientY,
       });
-    }
+    };
 
     window.addEventListener('mousemove', handleMovement);
 
-    return () =>
-      window.removeEventListener('mousemove', handleMovement);
-
+    return () => window.removeEventListener('mousemove', handleMovement);
   }, []);
 
   const router = useRouter();

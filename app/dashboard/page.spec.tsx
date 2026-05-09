@@ -10,8 +10,8 @@ jest.mock('@/app/services/balances', () => ({
 }));
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: jest.fn()
-  })
+    push: jest.fn(),
+  }),
 }));
 
 import { render, screen, waitFor } from '@testing-library/react';
@@ -24,7 +24,7 @@ describe('when dashboard page loads', () => {
   describe('when dashboard contents have successfully rendered', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    })
+    });
 
     it('should render dashboard contents correctly', async () => {
       (service.getAccounts as jest.Mock).mockResolvedValue([
@@ -60,15 +60,15 @@ describe('when dashboard page loads', () => {
       expect(title).toBeInTheDocument();
       expect(balanceTile).toBeInTheDocument();
       expect(anotherTitle).toBeInTheDocument();
-      expect(screen.getByText('Loading...')).toBeInTheDocument()
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
 
       await waitFor(async () => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-      })
+      });
       const ownerName = screen.getByText('Jason Duval');
       expect(ownerName).toBeInTheDocument();
       expect(service.getAccounts).toHaveBeenCalledTimes(1);
       expect(balanceService.getAllBalances).toHaveBeenCalledTimes(1);
     });
-  })
-})
+  });
+});

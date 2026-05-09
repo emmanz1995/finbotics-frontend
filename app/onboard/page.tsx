@@ -8,6 +8,7 @@ import { service } from '@/app/services/onboard';
 import Card from '@/app/components/molecules/card';
 import { Heading, MainContainer, GridDisplay } from './onboard.styled';
 import Input from '@/app/components/atoms/input';
+import { BabyIcon } from 'lucide-react';
 
 const OnBoard: FC = () => {
   const [institutions, setInstitutions] = useState<any[]>([]);
@@ -60,7 +61,6 @@ const OnBoard: FC = () => {
             Select your bank to securely connect your accounts. We use
             bank-level security to keep your information safe.
           </p>
-          <Input />
         </Heading>
         <MainContainer>
           <GridDisplay data-testid="main-container">
