@@ -194,7 +194,7 @@ const AccountsDashboard: FC = () => {
             <Button
               variant="outline"
               size="sm"
-              data-testid="test-del-btn"
+              data-testid="test-edit-btn"
               onClick={() =>
                 handleEditAccount(selectedAccountId, 'Emmanuel C Okuchukwu')
               }
@@ -267,6 +267,7 @@ const AccountsDashboard: FC = () => {
                   evt.stopPropagation();
                   navigate.push('/onboard-institution');
                 }}
+                data-testid="connect-test-btn"
               >
                 Connect Bank
               </Button>
