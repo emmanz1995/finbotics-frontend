@@ -17,7 +17,6 @@ export const useCountDown = (
     const interval = setInterval(() => {
       const currentTime = new Date().getTime();
       const targetTime = new Date(date).getTime();
-      // console.log('targetTime', targetTime);
       const remaining = targetTime - currentTime;
       // const remaining = 0; // For testing edge case purposes
 

@@ -41,7 +41,7 @@ describe('useCountDown', () => {
 
     act(() => {
       jest.advanceTimersByTime(2000);
-    })
+    });
 
     expect(mockSetMessage).toHaveBeenCalledTimes(1);
     expect(mockSetMessage).toHaveBeenCalledWith(
