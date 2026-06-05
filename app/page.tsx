@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Button from './components/atoms/button';
 import { motion } from 'framer-motion';
 import Carousel from '@/app/components/organisms/Carousel';
+import { useCountDown } from '@/app/hooks';
 
 const Orb = styled(motion.div)`
   pointer-events: none;
@@ -28,6 +29,8 @@ export default function Home() {
     x: 0,
     y: 0,
   });
+  const [message, setMessage] = useState('');
+  const { time } = useCountDown()
 
   useEffect(() => {
     const handleMovement = (evt: MouseEvent) => {
@@ -54,10 +57,12 @@ export default function Home() {
           duration: 0.5,
         }}
       />
+      {message}
       <Button variant={'primary'} onClick={() => router.push('/dashboard')}>
         Hello There
       </Button>
       <Carousel />
+      <p>{time}</p>
     </div>
   );
 }
