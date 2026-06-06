@@ -30,7 +30,7 @@ export default function Home() {
     y: 0,
   });
   const [message, setMessage] = useState('');
-  const { time } = useCountDown();
+  const { time } = useCountDown('2026-06-06', setMessage);
 
   useEffect(() => {
     const handleMovement = (evt: MouseEvent) => {

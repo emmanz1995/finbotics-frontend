@@ -12,6 +12,7 @@ export const useCountDown = (
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
+  const month = day * 12;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,7 +21,7 @@ export const useCountDown = (
       const remaining = targetTime - currentTime;
       // const remaining = 0; // For testing edge case purposes
 
-      const days = Math.floor(remaining / day);
+      const days = setPadding(Math.floor(remaining / day));
       const hours = setPadding(Math.floor((remaining % day) / hour));
       const minutes = setPadding(Math.floor((remaining % hour) / minute));
       const seconds = setPadding(Math.floor((remaining % minute) / second));
@@ -36,6 +37,7 @@ export const useCountDown = (
             );
           }, 1000);
         }
+        setTime('00:00:00:00');
         console.log('Times up!');
       }
     }, 1000);
