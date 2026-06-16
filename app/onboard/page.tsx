@@ -1,28 +1,38 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
+import { BabyIcon } from 'lucide-react';
+import { service as institutionService } from '@/app/services/institutions';
 import Layout from '@/app/components/template';
 import { Institutions } from '@/app/helpers';
 import { service } from '@/app/services/onboard';
 import Card from '@/app/components/molecules/card';
 import { Heading, MainContainer, GridDisplay } from './onboard.styled';
 import Input from '@/app/components/atoms/input';
-import { BabyIcon } from 'lucide-react';
+import Pagination from '@/app/components/molecules/pagination';
+import pagination from '@/app/components/molecules/pagination';
 
 const OnBoard: FC = () => {
   const [institutions, setInstitutions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>('');
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const LIMIT: number = 15;
 
   useEffect(() => {
     let isMounted: boolean = true;
     const getInstitutions = async () => {
       setLoading(true);
-      const data = Institutions;
+
+      const data = await institutionService.getInstitutions(page, LIMIT);
+
+      setPage(data.pagination.pages);
+      setTotalPages(data.pagination.totalPages);
 
       if (isMounted) {
-        setInstitutions(data);
+        setInstitutions(data.institutions);
         setLoading(false);
       }
     };
@@ -30,12 +40,20 @@ const OnBoard: FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [page]);
 
   const chooseInstitutionId = useCallback(
     (id: string) => setSelectedId(prevId => (prevId === id ? null : id)),
     []
   );
+
+  const handleChangePage = (
+    evt: MouseEvent<HTMLButtonElement>,
+    pageNumber: number
+  ) => {
+    evt.preventDefault();
+    setPage(pageNumber);
+  };
 
   const handleConnectBank = async () => {
     try {
@@ -68,11 +86,11 @@ const OnBoard: FC = () => {
               <p>Loading...</p>
             ) : (
               <>
-                {institutions.map(institution => (
+                {institutions?.map((institution: any) => (
                   <Card
-                    key={institution.id}
-                    onSelectBank={() => chooseInstitutionId(institution.id)}
-                    isSelected={institution.id === selectedId}
+                    key={institution._id}
+                    onSelectBank={() => chooseInstitutionId(institution._id)}
+                    isSelected={institution._id === selectedId}
                     institution={institution}
                     handleConnectBank={() => handleConnectBank()}
                     data-testid="institution-card"
@@ -81,6 +99,10 @@ const OnBoard: FC = () => {
               </>
             )}
           </GridDisplay>
+          <Pagination
+            totalPages={totalPages}
+            handleChangePage={handleChangePage}
+          />
         </MainContainer>
       </Layout>
     </div>
