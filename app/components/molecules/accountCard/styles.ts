@@ -3,7 +3,10 @@ import styled from 'styled-components';
 export const AccountCard = styled.div<{ $isAccountIdSelected: boolean }>`
   background-color: ${({ $isAccountIdSelected }) =>
     $isAccountIdSelected ? 'grey' : 'white'};
-  border-radius: ${({ theme }: any) => theme.radii?.lg};
+  border-radius: ${({ theme }: any) => {
+    console.log(theme);
+    return theme.radii?.lg;
+  }};
   box-shadow: ${({ theme }: any) => theme.shadows?.md};
   padding: 1.5rem;
 

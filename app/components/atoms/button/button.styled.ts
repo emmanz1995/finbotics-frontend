@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { theme } from '@/app/styles/theme';
+import { ThemeType } from '@/app/styles/theme';
 
 interface Props {
   colors: {
@@ -13,47 +13,53 @@ const chooseVariant = (variant: string, theme: Props) => {
   switch (variant) {
     case 'primary':
       return css`
-        background-color: ${theme.colors.primary};
+        background-color: rgb(106 85 250 / 1);
+        //background-color: ${theme.colors?.primary};
         color: white;
-        border: 1px solid ${theme.colors.primary};
+        border: 1px solid rgb(106 85 250 / 1);
+        //border: 1px solid ${theme.colors?.primary};
         &:hover:not(:disabled) {
-          background-color: ${theme.colors.primary}e6;
+          background-color: rgb(106 85 250 / 1)e6;
+          //background-color: ${theme.colors?.primary}e6;
         }
       `;
     case 'secondary':
       return css`
-        background-color: ${theme.colors.secondary};
+        background-color: rgb(31 41 55 / 1);
+        //background-color: ${theme.colors?.secondary};
         color: white;
-        border: 1px solid ${theme.colors.secondary};
+        border: 1px solid rgb(31 41 55 / 1);
+        //border: 1px solid ${theme.colors?.secondary};
         &:hover:not(:disabled) {
-          background-color: ${theme.colors.secondary}e6;
+          background-color: rgb(31 41 55 / 1)e6;
+          //background-color: ${theme.colors?.secondary}e6;
         }
       `;
     case 'outline':
       return css`
         background-color: transparent;
-        color: ${theme.colors.primary};
-        border: 1px solid ${theme.colors.primary};
+        color: rgb(106 85 250 / 1);
+        border: 1px solid rgb(106 85 250 / 1);
         &:hover:not(:disabled) {
-          background-color: ${theme.colors.primary}1a;
+          background-color: rgb(106 85 250 / 1)1a;
         }
       `;
     case 'ghost':
       return css`
         background-color: transparent;
-        color: ${theme.colors.text.primary};
+        color: rgb(106 85 250 / 1);
         border: 1px solid transparent;
         &:hover:not(:disabled) {
-          background-color: ${theme.colors.text.primary}1a;
+          background-color: rgb(106 85 250 / 1)1a;
         }
       `;
     case 'danger':
       return css`
-        background-color: ${theme.colors.danger};
+        background-color: #ef4444;
         color: white;
-        border: 1px solid ${theme.colors.danger};
+        border: 1px solid #ef4444;
         &:hover:not(:disabled) {
-          background-color: ${theme.colors.danger}e6;
+          background-color: #ef4444e6;
         }
       `;
     default:
@@ -99,20 +105,20 @@ export const StyledButton = styled.button<{
   ${({ $size }) => {
     return chooseSize($size);
   }}
-  ${({ $variant }) => {
+  ${({ $variant, theme }) => {
     return chooseVariant($variant, theme);
   }}
    width: ${({ $fullWidth }) => ($fullWidth === 'full' ? '100%' : 'auto')};
 `;
 
-export const LoadingSpinner = styled.div<{ theme: Props }>`
+export const LoadingSpinner = styled.div<ThemeType>`
   width: 1rem;
   height: 1rem;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: white;
   animation: spin 0.8s linear infinite;
-  background-color: ${theme.colors.primary};
+  background-color: ${(props: any) => props?.theme?.colors?.primary};
   @keyframes spin {
     to {
       transform: rotate(360deg);

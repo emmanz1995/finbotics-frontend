@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '@/app/styles/theme';
+import { ThemeType } from '@/app/styles/theme';
 
 export const GridLayout = styled.div`
   display: grid;
@@ -17,10 +17,10 @@ export const HeaderContent = styled.div`
   gap: 1rem;
 `;
 
-export const AccountDetailsContainer = styled.div`
+export const AccountDetailsContainer = styled.div<ThemeType>`
   padding: 1.5rem;
-  border-radius: ${theme.radii?.lg};
-  box-shadow: ${theme.shadows?.lg};
+  border-radius: ${({ theme }) => theme.radii?.lg};
+  box-shadow: ${({ theme }) => theme.shadows?.lg};
   background-color: white;
 `;
 
@@ -43,42 +43,42 @@ export const AccountDetailsSection = styled.div`
   gap: 1.5rem;
 `;
 
-export const AccountDetail = styled.div`
-  background-color: ${theme.colors?.background};
+export const AccountDetail = styled.div<ThemeType>`
+  background-color: ${({ theme }) => theme.colors?.background};
   padding: 1.5rem;
-  border-radius: ${theme?.radii?.lg};
+  border-radius: ${({ theme }) => theme?.radii?.lg};
 `;
 
-export const SpendingOverviewContainer = styled.div`
-  box-shadow: ${theme.shadows?.lg};
-  background-color: ${theme.colors?.text?.white};
+export const SpendingOverviewContainer = styled.div<ThemeType>`
+  box-shadow: ${({ theme }) => theme.shadows?.lg};
+  background-color: ${({ theme }) => theme.colors?.text?.white};
   padding: 1.5rem;
   height: 400px;
-  border-radius: ${theme.radii?.lg};
+  border-radius: ${({ theme }) => theme.radii?.lg};
   width: 100%;
   margin-bottom: 1.5rem;
 `;
-export const SpendingPredicationContainer = styled.div`
-  box-shadow: ${theme.shadows?.lg};
-  background-color: ${theme.colors?.text?.white};
+export const SpendingPredicationContainer = styled.div<ThemeType>`
+  box-shadow: ${({ theme }) => theme.shadows?.lg};
+  background-color: ${({ theme }) => theme.colors?.text?.white};
   padding: 1.5rem;
   height: 350px;
-  border-radius: ${theme.radii?.lg};
+  border-radius: ${({ theme }) => theme.radii?.lg};
   margin-bottom: 1.5rem;
 `;
-export const RecentTransactionContainer = styled.div`
-  box-shadow: ${theme.shadows?.lg};
-  background-color: ${theme?.colors?.text?.white};
+export const RecentTransactionContainer = styled.div<ThemeType>`
+  box-shadow: ${({ theme }) => theme.shadows?.lg};
+  background-color: ${({ theme }) => theme?.colors?.text?.white};
   padding: 1.5rem;
   height: 500px;
-  border-radius: ${theme.radii?.lg};
+  border-radius: ${({ theme }) => theme.radii?.lg};
 `;
-export const FinancialTipsContainer = styled.div`
-  box-shadow: ${theme.shadows?.lg};
-  background-color: ${theme.colors?.text?.white};
+export const FinancialTipsContainer = styled.div<ThemeType>`
+  box-shadow: ${({ theme }) => theme.shadows?.lg};
+  background-color: ${({ theme }) => theme.colors?.text?.white};
   padding: 1.5rem;
   height: 400px;
-  border-radius: ${theme.radii?.lg};
+  border-radius: ${({ theme }) => theme.radii?.lg};
 `;
 export const HeaderContainer = styled.span`
   display: flex;
@@ -109,8 +109,8 @@ export const Pagination = styled.div`
 
 export const StyledTabs = styled.div``;
 export const StyledTabsOption = styled.div``;
-export const TransactionContainer = styled.div`
-  background-color: ${theme.colors?.text?.white};
+export const TransactionContainer = styled.div<ThemeType>`
+  background-color: ${({ theme }) => theme.colors?.text?.white};
   width: 100%;
 `;
 export const TransactionDetailsContainer = styled.div`
@@ -125,61 +125,61 @@ export const TransactionDetailsContainer = styled.div`
 // export const AccountDetailsContainer = styled.div``
 // export const AccountDetailsContainer = styled.div``
 
-export const TransactionListContainer = styled.div`
-  background-color: ${theme.colors?.text?.white};
+export const TransactionListContainer = styled.div<ThemeType>`
+  background-color: ${({ theme }) => theme.colors?.text?.white};
   border-radius: 6px;
-  box-shadow: ${theme.shadows?.md};
+  box-shadow: ${({ theme }) => theme.shadows?.md};
   overflow: hidden;
 `;
 export const TransactionHeader = styled.div`
   padding: 15px;
   border-bottom: 1px solid #ddd;
 `;
-export const TransactionTitle = styled.h3`
-  font-size: ${theme.fontSizes.lg};
+export const TransactionTitle = styled.h3<ThemeType>`
+  font-size: ${({ theme }) => theme.fontSizes.lg};
   font-weight: 600;
-  color: ${theme.colors?.text?.primary};
-  margin-bottom: ${theme.space?.xs};
+  color: ${({ theme }) => theme.colors?.text?.primary};
+  margin-bottom: ${({ theme }) => theme.space?.xs};
 `;
-export const TransactionSubtitle = styled.p`
-  font-size: ${theme.fontSizes.sm};
-  color: ${theme.colors?.text?.secondary};
+export const TransactionSubtitle = styled.p<ThemeType>`
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  color: ${({ theme }) => theme.colors?.text?.secondary};
 `;
 export const TransactionTable = styled.div`
   width: 100%;
 `;
-export const TransactionRow = styled.div`
+export const TransactionRow = styled.div<ThemeType>`
   display: flex;
   align-items: center;
-  padding: ${theme.space.md} ${theme.space.lg};
-  border-bottom: 1px solid ${theme.colors?.text?.light};
+  padding: ${({ theme }) => theme.space.md} ${({ theme }) => theme.space.lg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors?.text?.light};
   transition: background-color 0.2s ease;
   &:last-child {
     border-bottom: none;
   }
   &:hover {
-    background-color: ${theme.colors?.text?.light};
+    background-color: ${({ theme }) => theme.colors?.text?.light};
   }
 `;
 export const TransactionInfo = styled.div`
   flex: 1;
 `;
-export const TransactionName = styled.div`
+export const TransactionName = styled.div<ThemeType>`
   font-weight: 500;
-  color: ${theme.colors?.text?.primary};
-  margin-bottom: ${theme.space.xs};
+  color: ${({ theme }) => theme.colors?.text?.primary};
+  margin-bottom: ${({ theme }) => theme.space.xs};
 `;
-export const TransactionMeta = styled.div`
+export const TransactionMeta = styled.div<ThemeType>`
   display: flex;
-  font-size: ${theme.fontSizes?.sm};
-  color: ${theme.colors?.text?.secondary};
+  font-size: ${({ theme }) => theme.fontSizes?.sm};
+  color: ${({ theme }) => theme.colors?.text?.secondary};
 `;
-export const TransactionCategory = styled.span`
-  margin-right: ${theme.space.md};
+export const TransactionCategory = styled.span<ThemeType>`
+  margin-right: ${({ theme }) => theme.space.md};
 `;
 export const TransactionDate = styled.span``;
 export const TransactionAmount = styled.div<{
-  $type: 'credit' | 'debit';
+  $type: 'credit' | 'debit'; theme: ThemeType;
 }>`
   font-weight: 600;
   color: ${({ $type, theme }: any) =>
@@ -190,7 +190,7 @@ export const TransactionAmount = styled.div<{
 `;
 
 export const IconContainer = styled.div<{
-  $category: string;
+  $category: string; theme:ThemeType;
 }>`
   width: 40px;
   height: 40px;
