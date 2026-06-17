@@ -52,6 +52,7 @@ import {
 } from './styles';
 import { extractAccountNumber, toUppercaseFirstLetter } from '../../helpers';
 import Button from '../../components/atoms/button';
+import { service as predicationService } from '@/app/services/predictions';
 
 interface ResourceProps {
   id: string;
@@ -101,29 +102,30 @@ const Dashboard: FC = () => {
     currency: '',
     ownerName: '',
   });
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [predicationData, setPredicationData] = useState({});
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages = transactions.pagination.totalPages;
   const navigate = useRouter();
   const params = useParams();
   const accountId = params.id as string;
   console.log(accountId);
 
-  useEffect(() => {
-    const handleFetchAccountData = async () => {
-      const transactionRes = await accountsConnector.getTransactions(
-        accountId,
-        {
-          limit: 5,
-          currentPage,
-        }
-      );
-
-      setTransactions(transactionRes);
-      setCurrentPage(transactionRes?.pagination?.currentPage);
-    };
-
-    handleFetchAccountData();
-  }, [accountId, currentPage]);
+  // useEffect(() => {
+  //   const handleFetchAccountData = async () => {
+  //     const transactionRes = await accountsConnector.getTransactions(
+  //       accountId,
+  //       {
+  //         limit: 5,
+  //         currentPage,
+  //       }
+  //     );
+  //
+  //     setTransactions(transactionRes);
+  //     setCurrentPage(transactionRes?.pagination?.currentPage);
+  //   };
+  //
+  //   handleFetchAccountData();
+  // }, [accountId, currentPage]);
 
   useEffect(() => {
     const getAccountDetail = async () => {
@@ -134,6 +136,23 @@ const Dashboard: FC = () => {
   }, [accountId]);
   const scan = detail?.scan ? detail?.scan : '';
   const { accountNumber, sortCode } = extractAccountNumber(scan);
+
+  useEffect(() => {
+    if (!accountId) return;
+
+    const getPredication = async () => {
+      try {
+        const response = await predicationService.getPredication(accountId)
+        setPredicationData(response)
+      } catch (err: any) {
+        console.error('Failed to fetch prediction', err);
+      }
+    }
+
+    getPredication()
+  }, [accountId]);
+
+  console.log('...prediction', predicationData);
 
   const pages = [];
   for (let i = 0; totalPages > i; i++) {
@@ -224,6 +243,10 @@ const Dashboard: FC = () => {
                 <TrendingUpIcon />
                 <h3>Spending Prediction</h3>
               </HeaderContainer>
+              <h5>Store frequency</h5>{' '}
+              <p>
+                {predicationData.spendingPrediction?.frequentStores.join(', ')}
+              </p>
             </SpendingPredicationContainer>
             <RecentTransactionContainer>
               <HeaderContainer>
