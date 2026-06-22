@@ -11,6 +11,7 @@ import {
   RefreshCcwIcon,
   TrashIcon,
   TrendingUpIcon,
+  TrendingUpDown,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/app/components/template';
@@ -38,6 +39,7 @@ import { service } from '@/app/services/accounts';
 import { service as balanceService } from '@/app/services/balances';
 import AccountCard from '@/app/components/molecules/accountCard';
 import { pickBalanceFields } from '@/app/helpers';
+import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
 
 export interface BalanceToReturnProp {
   [key: string]: {
@@ -80,6 +82,7 @@ const AccountsDashboard: FC = () => {
     let isMounted: boolean = true;
     const fetchAccountDetails = async () => {
       setLoading(true);
+      console.log(loading);
       const details = (await service.getAccounts()) as AccountDetailsProps[];
       if (isMounted) {
         setAccountDetails(details);
@@ -151,6 +154,8 @@ const AccountsDashboard: FC = () => {
       `Edited the name of the account to: ${name} with accountId ${id}`
     );
 
+  const handlePrediction = (id: string | null) => {}
+
   const handleCatchAccountId = useCallback((id: string) => {
     setSelectedAccountId(prev => (prev === id ? null : id));
   }, []);
@@ -200,6 +205,9 @@ const AccountsDashboard: FC = () => {
               }
             >
               <EditIcon cursor="pointer" />
+            </Button> {' '}
+            <Button variant='outline'>
+              <TrendingUpDown cursor='pointer' />
             </Button>
           </span>
         )}
@@ -240,9 +248,6 @@ const AccountsDashboard: FC = () => {
             <SummaryDescription>Due in the next 7 days</SummaryDescription>
           </SummaryCard>
         </SummarySection>
-        {loading ? (
-          <h4>Loading...</h4>
-        ) : (
           <AccountsGrid>
             {formattedDetails.map(detail => (
               <AccountCard
@@ -251,6 +256,7 @@ const AccountsDashboard: FC = () => {
                 navigate={navigate}
                 handleGetAccountId={() => handleCatchAccountId(detail.id)}
                 isAccountIdSelected={selectedAccountId === detail.id}
+                loading={loading}
               />
             ))}
             <ConnectBankCard>
@@ -273,7 +279,6 @@ const AccountsDashboard: FC = () => {
               </Button>
             </ConnectBankCard>
           </AccountsGrid>
-        )}
       </ContentContainer>
     </Layout>
   );

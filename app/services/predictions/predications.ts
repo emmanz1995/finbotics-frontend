@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:8083';
 const onCreatePredication = async (accountId: string) =>
   await connector(`${API_URL}/api/v1/analyse/transactions`, {
     method: 'POST',
-    data: { accountId }
+    data: { accountId },
   });
 
 const getPredication = async (accountId: string) =>
@@ -13,5 +13,5 @@ const getPredication = async (accountId: string) =>
 
 export const service = {
   onCreatePredication,
-  getPredication
-}
+  getPredication,
+};

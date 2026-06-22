@@ -7,6 +7,8 @@ import Button from './components/atoms/button';
 import { motion } from 'framer-motion';
 import Carousel from '@/app/components/organisms/Carousel';
 import { useCountDown } from '@/app/hooks';
+import AccountCardPulseEffect from '@/app/components/molecules/pulseEffects/accountCard/AccountCardPulse';
+import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
 
 const Orb = styled(motion.div)`
   pointer-events: none;
@@ -63,6 +65,7 @@ export default function Home() {
       </Button>
       <Carousel />
       <p>{time}</p>
+      {/*<AccountCardLoading />*/}
     </div>
   );
 }

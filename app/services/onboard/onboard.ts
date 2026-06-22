@@ -11,10 +11,12 @@ const handleConnectToBank = async (
     data: { institutionId },
   });
 
-const ingestAccounts = async (accountId: string): Promise<object> =>
+const ingestAccounts = async (
+  refOrRequisitionId: string | null
+): Promise<object> =>
   await connector(`${API_URL}/api/v1/access/callback`, {
     method: 'POST',
-    data: { accountId },
+    data: { requisitionId: refOrRequisitionId },
   });
 
 export const service = {

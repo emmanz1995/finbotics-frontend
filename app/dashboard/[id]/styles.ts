@@ -179,7 +179,8 @@ export const TransactionCategory = styled.span<ThemeType>`
 `;
 export const TransactionDate = styled.span``;
 export const TransactionAmount = styled.div<{
-  $type: 'credit' | 'debit'; theme: ThemeType;
+  $type: 'credit' | 'debit';
+  theme: ThemeType;
 }>`
   font-weight: 600;
   color: ${({ $type, theme }: any) =>
@@ -190,7 +191,8 @@ export const TransactionAmount = styled.div<{
 `;
 
 export const IconContainer = styled.div<{
-  $category: string; theme:ThemeType;
+  $category: string;
+  theme: ThemeType;
 }>`
   width: 40px;
   height: 40px;

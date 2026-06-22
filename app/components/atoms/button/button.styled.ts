@@ -19,7 +19,7 @@ const chooseVariant = (variant: string, theme: Props) => {
         border: 1px solid rgb(106 85 250 / 1);
         //border: 1px solid ${theme.colors?.primary};
         &:hover:not(:disabled) {
-          background-color: rgb(106 85 250 / 1)e6;
+          background-color: rgb(106 85 250 / 1) e6;
           //background-color: ${theme.colors?.primary}e6;
         }
       `;
@@ -31,7 +31,7 @@ const chooseVariant = (variant: string, theme: Props) => {
         border: 1px solid rgb(31 41 55 / 1);
         //border: 1px solid ${theme.colors?.secondary};
         &:hover:not(:disabled) {
-          background-color: rgb(31 41 55 / 1)e6;
+          background-color: rgb(31 41 55 / 1) e6;
           //background-color: ${theme.colors?.secondary}e6;
         }
       `;
@@ -41,7 +41,7 @@ const chooseVariant = (variant: string, theme: Props) => {
         color: rgb(106 85 250 / 1);
         border: 1px solid rgb(106 85 250 / 1);
         &:hover:not(:disabled) {
-          background-color: rgb(106 85 250 / 1)1a;
+          background-color: rgb(106 85 250 / 1) 1a;
         }
       `;
     case 'ghost':
@@ -50,7 +50,7 @@ const chooseVariant = (variant: string, theme: Props) => {
         color: rgb(106 85 250 / 1);
         border: 1px solid transparent;
         &:hover:not(:disabled) {
-          background-color: rgb(106 85 250 / 1)1a;
+          background-color: rgb(106 85 250 / 1) 1a;
         }
       `;
     case 'danger':

@@ -142,14 +142,14 @@ const Dashboard: FC = () => {
 
     const getPredication = async () => {
       try {
-        const response = await predicationService.getPredication(accountId)
-        setPredicationData(response)
+        const response = await predicationService.getPredication(accountId);
+        setPredicationData(response);
       } catch (err: any) {
         console.error('Failed to fetch prediction', err);
       }
-    }
+    };
 
-    getPredication()
+    getPredication();
   }, [accountId]);
 
   console.log('...prediction', predicationData);
