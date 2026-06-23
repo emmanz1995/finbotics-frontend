@@ -75,7 +75,7 @@ export const ConnectBankIcon = styled.div<ThemeType>`
   color: ${({ theme }) => theme.colors?.primary};
   margin-bottom: 1rem;
 `;
-export const ConnectBankTitle = styled.h3<ThemeType>`
+export const ConnectBankTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors?.text.primary};

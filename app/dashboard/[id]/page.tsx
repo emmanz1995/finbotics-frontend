@@ -19,6 +19,7 @@ import {
   WalletIcon,
   HeartPlus,
 } from 'lucide-react';
+import moment from 'moment';
 import { Title, Subtitle, ContentContainer } from '../../styles/common';
 import Layout from '../../components/template';
 import { service } from '@/app/services/accounts';
@@ -49,6 +50,14 @@ import {
   TransactionDate,
   TransactionMeta,
   IconContainer,
+  NotableExpense,
+  ExpenseTag,
+  NotableExpenseHeading,
+  FrequentStoreDiv,
+  FrequentStoreDesc,
+  PredictionWeekTitle,
+  PredictionWeekAmount,
+  FrequentStoreTitle,
 } from './styles';
 import { extractAccountNumber, toUppercaseFirstLetter } from '../../helpers';
 import Button from '../../components/atoms/button';
@@ -243,10 +252,55 @@ const Dashboard: FC = () => {
                 <TrendingUpIcon />
                 <h3>Spending Prediction</h3>
               </HeaderContainer>
-              <h5>Store frequency</h5>{' '}
-              <p>
-                {predicationData.spendingPrediction?.frequentStores.join(', ')}
-              </p>
+              <PredictionWeekTitle>
+                Predicted Spending Next Week
+              </PredictionWeekTitle>
+              <PredictionWeekAmount>
+                {new Intl.NumberFormat('en-GB', {
+                  style: 'currency',
+                  currency: 'GBP',
+                }).format(predicationData?.forecasting?.predictedSpendNextWeek)}
+              </PredictionWeekAmount>
+              <FrequentStoreTitle>Store frequency</FrequentStoreTitle>{' '}
+              <FrequentStoreDiv>
+                {predicationData.spendingPrediction?.frequentStores.map(
+                  (frequentStore: string, i: number) => (
+                    <FrequentStoreDesc key={i}>
+                      <ShoppingBagIcon size={11} /> {frequentStore}
+                    </FrequentStoreDesc>
+                  )
+                )}
+              </FrequentStoreDiv>
+              <NotableExpenseHeading>Notable Expenses</NotableExpenseHeading>
+              <NotableExpense>
+                {predicationData.spendingPrediction?.notableExpenses?.map(
+                  (
+                    expense: {
+                      date: string;
+                      amount: number;
+                      description: string;
+                    },
+                    idx: number
+                  ) => {
+                    return (
+                      <ExpenseTag key={idx}>
+                        <div>
+                          <p>{toUppercaseFirstLetter(expense?.description)}</p>
+                          <p>{moment(expense?.date).format('YYYY-MM-DD')}</p>
+                        </div>
+                        <p
+                          style={{ color: 'rgb(31, 41, 55)', fontWeight: 700 }}
+                        >
+                          {new Intl.NumberFormat('en-GB', {
+                            style: 'currency',
+                            currency: 'GBP',
+                          }).format(expense.amount)}
+                        </p>
+                      </ExpenseTag>
+                    );
+                  }
+                )}
+              </NotableExpense>
             </SpendingPredicationContainer>
             <RecentTransactionContainer>
               <HeaderContainer>

@@ -60,7 +60,8 @@ export const SpendingOverviewContainer = styled.div<ThemeType>`
 `;
 export const SpendingPredicationContainer = styled.div<ThemeType>`
   box-shadow: ${({ theme }) => theme.shadows?.lg};
-  background-color: ${({ theme }) => theme.colors?.text?.white};
+  //background-color: ${({ theme }) => theme.colors?.text?.white};
+  background-color: white;
   padding: 1.5rem;
   height: 350px;
   border-radius: ${({ theme }) => theme.radii?.lg};
@@ -85,6 +86,7 @@ export const HeaderContainer = styled.span`
   align-items: center;
   justify-content: left;
   gap: 0.5rem;
+  margin-bottom: 15px;
 `;
 export const GroupedRows = styled.div`
   display: flex;
@@ -244,3 +246,58 @@ export const IconContainer = styled.div<{
     }
   }};
 `;
+
+export const NotableExpenseHeading = styled.p`
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 800;
+  margin-top: 0.5rem;
+`;
+
+export const NotableExpense = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 0.5rem;
+`;
+export const ExpenseTag = styled.div`
+  padding: 10px;
+  background-color: rgb(249, 250, 251);
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const FrequentStoreDiv = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+export const FrequentStoreDesc = styled.p`
+  font-size: 10px;
+  padding: 3px;
+  background-color: rgb(249, 250, 251);
+  border-radius: 0.25rem;
+  color: rgb(31, 41, 55);
+  font-weight: 700;
+  margin-top: 0.5rem;
+`;
+
+export const PredictionWeekTitle = styled.p`
+  font-size: 0.75rem;
+  color: rgb(107, 114, 128);
+  margin-bottom: 0.25rem;
+`;
+export const PredictionWeekAmount = styled.div`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(31, 41, 55);
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+`;
+export const FrequentStoreTitle = styled.h6`
+  font-size: 0.75rem;
+  color: rgb(107, 114, 128);
+  margin-bottom: 0.25rem;
+`;
+// export const AccountDetailsContainer = styled.div``;

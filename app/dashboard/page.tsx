@@ -37,9 +37,11 @@ import {
 } from './styles';
 import { service } from '@/app/services/accounts';
 import { service as balanceService } from '@/app/services/balances';
+import { service as predicationService } from '@/app/services/predictions';
 import AccountCard from '@/app/components/molecules/accountCard';
 import { pickBalanceFields } from '@/app/helpers';
 import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
+import AccountCardPulse from '@/app/components/molecules/pulseEffects/accountCard/AccountCardPulse';
 
 export interface BalanceToReturnProp {
   [key: string]: {
@@ -154,7 +156,13 @@ const AccountsDashboard: FC = () => {
       `Edited the name of the account to: ${name} with accountId ${id}`
     );
 
-  const handlePrediction = (id: string | null) => {}
+  const handlePrediction = async (id: string | null) => {
+    try {
+      await predicationService.onCreatePredication(id);
+    } catch (err: any) {
+      console.log('Failed to make the predication for user:', err);
+    }
+  };
 
   const handleCatchAccountId = useCallback((id: string) => {
     setSelectedAccountId(prev => (prev === id ? null : id));
@@ -205,9 +213,12 @@ const AccountsDashboard: FC = () => {
               }
             >
               <EditIcon cursor="pointer" />
-            </Button> {' '}
-            <Button variant='outline'>
-              <TrendingUpDown cursor='pointer' />
+            </Button>{' '}
+            <Button variant="outline">
+              <TrendingUpDown
+                onClick={() => handlePrediction(selectedAccountId)}
+                cursor="pointer"
+              />
             </Button>
           </span>
         )}
@@ -248,37 +259,42 @@ const AccountsDashboard: FC = () => {
             <SummaryDescription>Due in the next 7 days</SummaryDescription>
           </SummaryCard>
         </SummarySection>
-          <AccountsGrid>
-            {formattedDetails.map(detail => (
-              <AccountCard
-                key={detail.id}
-                detail={detail}
-                navigate={navigate}
-                handleGetAccountId={() => handleCatchAccountId(detail.id)}
-                isAccountIdSelected={selectedAccountId === detail.id}
-                loading={loading}
-              />
-            ))}
-            <ConnectBankCard>
-              <ConnectBankIcon>
-                <PlusCircleIcon size={30} />
-              </ConnectBankIcon>
-              <ConnectBankTitle>Connect a New Bank</ConnectBankTitle>
-              <ConnectBankDescription>
-                Add another bank account to get a complete view of your finances
-              </ConnectBankDescription>
-              <Button
-                variant="primary"
-                onClick={evt => {
-                  evt.stopPropagation();
-                  navigate.push('/onboard-institution');
-                }}
-                data-testid="connect-test-btn"
-              >
-                Connect Bank
-              </Button>
-            </ConnectBankCard>
-          </AccountsGrid>
+        <AccountsGrid>
+          {formattedDetails.map(detail => (
+            <>
+              {loading ? (
+                <AccountCardPulse />
+              ) : (
+                <AccountCard
+                  key={detail.id}
+                  detail={detail}
+                  navigate={navigate}
+                  handleGetAccountId={() => handleCatchAccountId(detail.id)}
+                  isAccountIdSelected={selectedAccountId === detail.id}
+                />
+              )}
+            </>
+          ))}
+          <ConnectBankCard>
+            <ConnectBankIcon>
+              <PlusCircleIcon size={30} />
+            </ConnectBankIcon>
+            <ConnectBankTitle>Connect a New Bank</ConnectBankTitle>
+            <ConnectBankDescription>
+              Add another bank account to get a complete view of your finances
+            </ConnectBankDescription>
+            <Button
+              variant="primary"
+              onClick={evt => {
+                evt.stopPropagation();
+                navigate.push('/onboard-institution');
+              }}
+              data-testid="connect-test-btn"
+            >
+              Connect Bank
+            </Button>
+          </ConnectBankCard>
+        </AccountsGrid>
       </ContentContainer>
     </Layout>
   );

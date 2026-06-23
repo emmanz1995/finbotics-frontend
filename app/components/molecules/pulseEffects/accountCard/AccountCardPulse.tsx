@@ -99,7 +99,7 @@ const AccountCardPulseEffect: FC = () => {
         </AccountInfo>
       </AccountHeader>
     </AccountCard>
-  )
-}
+  );
+};
 
 export default AccountCardPulseEffect;
