@@ -1,6 +1,6 @@
 'use client';
 
-import type { FC } from 'react';
+import { FC } from 'react';
 import { useMemo, useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import {
@@ -38,6 +38,7 @@ import {
 import { service } from '@/app/services/accounts';
 import { service as balanceService } from '@/app/services/balances';
 import { service as predicationService } from '@/app/services/predictions';
+import { authService } from '@/app/services/auth';
 import AccountCard from '@/app/components/molecules/accountCard';
 import { pickBalanceFields } from '@/app/helpers';
 import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
@@ -77,6 +78,10 @@ const AccountsDashboard: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>('');
   const [message, setMessage] = useState<string>('');
+  const [currentUser, setCurrentUser] = useState<{
+    username: string;
+    userId: string;
+  } | null>(null);
 
   const navigate = useRouter();
 
@@ -168,8 +173,24 @@ const AccountsDashboard: FC = () => {
     setSelectedAccountId(prev => (prev === id ? null : id));
   }, []);
 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const accessToken = JSON.parse(
+          localStorage.getItem('access_token') as string
+        ).access_token;
+        const userDetails = authService.extractCurrentUser(accessToken);
+
+        setCurrentUser(userDetails);
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+
+    getCurrentUser();
+  }, []);
   return (
-    <Layout>
+    <Layout userInfo={currentUser}>
       <ContentContainer>
         <PageHeader>
           <HeaderContent>

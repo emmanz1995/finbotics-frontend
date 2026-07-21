@@ -1,4 +1,5 @@
 import { connector } from '@/app/connector';
+import { authorizationHeader } from '@/app/helpers';
 
 // const API_URL = process.env.REACT_APP_API_URL;
 const API_URL = 'http://localhost:8083';
@@ -33,7 +34,9 @@ const onSyncAccount = async (id: string | null): Promise<object> => {
 };
 
 const getAccounts = async () =>
-  await connector(`${API_URL}/api/v1/account/details`);
+  await connector(`${API_URL}/api/v1/account/details`, {
+    authHeader: authorizationHeader(),
+  });
 
 const getAccountsByAccId = async (accountId: string) =>
   await connector(`${API_URL}/api/v1/account?accountId=${accountId}`);

@@ -15,7 +15,10 @@ const onLogin = async (email: string, password: string) => {
     });
 
     if (data.userInfo.token) {
-      localStorage.setItem('access_token', JSON.stringify(data.userInfo.token));
+      localStorage.setItem(
+        'access_token',
+        JSON.stringify({ access_token: data.userInfo.token })
+      );
     }
 
     return data;
@@ -39,7 +42,10 @@ const extractCurrentUser = (accessToken: string) => {
   }
 };
 
+const onLogout = () => localStorage.removeItem('access_token');
+
 export const authService = {
   onLogin,
+  onLogout,
   extractCurrentUser,
 };

@@ -8,12 +8,14 @@ interface Options {
 }
 
 const request = async (url: string, options?: Options): Promise<object> => {
+  console.log('authorizing request...', options?.authHeader);
   const defaults = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache no-store must-revalidate',
       Pragma: 'no-cache',
+      ...options?.authHeader,
     },
   };
   let data;

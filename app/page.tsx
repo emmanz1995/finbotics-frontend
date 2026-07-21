@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import Button from './components/atoms/button';
@@ -9,6 +10,9 @@ import Carousel from '@/app/components/organisms/Carousel';
 import { useCountDown } from '@/app/hooks';
 import AccountCardPulseEffect from '@/app/components/molecules/pulseEffects/accountCard/AccountCardPulse';
 import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
+import Layout from '@/app/components/template';
+import Input from '@/app/components/atoms/input';
+import { authService } from '@/app/services/auth';
 
 const Orb = styled(motion.div)`
   pointer-events: none;
@@ -26,46 +30,69 @@ const Orb = styled(motion.div)`
   //background-color: #6B7280;
 `;
 
+const values = {
+  email: '',
+  password: '',
+};
+
 export default function Home() {
-  const [mousePosition, setMousePosition] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [loginValues, setLoginValues] = useState<{
+    email: string;
+    password: string;
+  }>(values);
   const [message, setMessage] = useState('');
-  const { time } = useCountDown('2026-06-06', setMessage);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const handleMovement = (evt: MouseEvent) => {
-      setMousePosition({
-        x: evt.clientX,
-        y: evt.clientY,
-      });
-    };
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoginValues({ ...loginValues, [e.target.name]: e.target.value });
+  };
 
-    window.addEventListener('mousemove', handleMovement);
-
-    return () => window.removeEventListener('mousemove', handleMovement);
-  }, []);
+  const handleLogin = async (evt: FormEvent) => {
+    evt.preventDefault();
+    setLoading(true);
+    try {
+      await authService.onLogin(loginValues.email, loginValues.password);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      setMessage('Failed to login, please try again later.');
+      console.log(err.message);
+    }
+    router.push('/dashboard');
+  };
 
   const router = useRouter();
   return (
     <div className="main">
-      <h1>Hello World!</h1>
-      <Orb
-        animate={{ x: mousePosition.x, y: mousePosition.y }}
-        transition={{
-          type: 'tween',
-          ease: 'backOut',
-          duration: 0.5,
-        }}
-      />
-      {message}
-      <Button variant={'primary'} onClick={() => router.push('/dashboard')}>
-        Hello There
-      </Button>
-      <Carousel />
-      <p>{time}</p>
-      {/*<AccountCardLoading />*/}
+      <Layout>
+        <h1>Login</h1>
+        {message && <span className="message">{message}</span>}
+        <form onSubmit={handleLogin}>
+          <Input
+            name="email"
+            placeholder="John.Doe@eyefind.com"
+            type="text"
+            value={loginValues.email}
+            onChange={onChange}
+          />
+          <Input
+            name="password"
+            placeholder="************************"
+            type="password"
+            value={loginValues.password}
+            onChange={onChange}
+          />
+          <Button
+            variant="outline"
+            fullWidth="full"
+            onClick={() => router.push('/dashboard')}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : 'Login'}
+          </Button>
+        </form>
+      </Layout>
     </div>
   );
 }

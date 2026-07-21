@@ -1,4 +1,4 @@
-// import { useNavigate } from 'react-router-dom';
+import type { FC } from 'react';
 import {
   HomeIcon,
   PlusCircle,
@@ -10,7 +10,10 @@ import {
   // LogOutIcon,
 } from 'lucide-react';
 import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
 import { theme } from '@/app/styles/theme';
+import Button from '@/app/components/atoms/button';
+import { authService } from '@/app/services/auth';
 
 const Nav = styled.nav`
   width: 100%;
@@ -51,9 +54,15 @@ const LogoText = styled.h1`
   font-weight: 600;
 `;
 
-const Navbar = () => {
-  // const navigate = useNavigate();
+const Navbar: FC<{ userInfo: { username: string; userId: string } }> = ({
+  userInfo,
+}) => {
+  const router = useRouter();
 
+  const handleLogout = () => {
+    authService.onLogout();
+    router.push('/');
+  };
   return (
     <Nav>
       <NavMainSection>
@@ -67,16 +76,36 @@ const Navbar = () => {
           <LogoText>Finbotics</LogoText>
         </Logo>
         <UnorderedList>
-          <List>
-            <HyperLink href="/accounts-dashboard">
-              <HomeIcon size={15} /> Dashboard
-            </HyperLink>
-          </List>
-          <List>
-            <HyperLink href="/onboard-institution">
-              <PlusCircle size={15} /> Connect Bank
-            </HyperLink>
-          </List>
+          {userInfo ? (
+            <>
+              <List>
+                <HyperLink href="/accounts-dashboard">
+                  <HomeIcon size={15} /> Dashboard
+                </HyperLink>
+              </List>
+              <List>
+                <HyperLink href="/onboard-institution">
+                  <PlusCircle size={15} /> Connect Bank
+                </HyperLink>
+              </List>
+              <Button variant="outline" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <List>
+                <HyperLink href="/">
+                  <HomeIcon size={15} /> Login
+                </HyperLink>
+              </List>
+              <List>
+                <HyperLink href="/sign-up">
+                  <PlusCircle size={15} /> Register
+                </HyperLink>
+              </List>
+            </>
+          )}
           {/* <List>
             <HyperLink href="/profile/:id">
               <User2Icon size={15} /> Profile
