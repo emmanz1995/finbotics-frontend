@@ -19,10 +19,12 @@ const onSyncAccount = async (id: string | null): Promise<object> => {
     await connector(`${API_URL}/api/v1/transactions/ingest`, {
       method: 'POST',
       data: { accountId: id },
+      authHeader: authorizationHeader(),
     }),
     await connector(`${API_URL}/api/v1/balances/sync`, {
       method: 'POST',
       data: { accountId: id },
+      authHeader: authorizationHeader(),
     }),
   ]);
 
