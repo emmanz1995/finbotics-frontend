@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-const API_URL = 'http://localhost:8083';
+const API_URL = 'http://localhost:8082';
 
 const onLogin = async (email: string, password: string) => {
   try {

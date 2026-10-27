@@ -1,4 +1,7 @@
-export const authorizationHeader = (): object => {
+export const authorizationHeader = (): {
+  Authorization: string;
+  'Content-Type'?: string;
+} | null => {
   const accessToken = JSON.parse(
     <string>localStorage.getItem('access_token')
   ).access_token;
@@ -7,5 +10,5 @@ export const authorizationHeader = (): object => {
     return {
       Authorization: `Bearer ${accessToken}`,
     };
-  } else return {};
+  } else return null;
 };

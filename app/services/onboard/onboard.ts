@@ -4,12 +4,19 @@ import { authorizationHeader } from '@/app/helpers';
 // const API_URL = process.env.REACT_APP_API_URL;
 const API_URL = 'http://localhost:8083';
 
+const authorization: { Authorization: string; 'Content-Type'?: string } | null =
+  authorizationHeader();
+if (authorization) {
+  authorization['Content-Type'] = 'application/json';
+}
+
 const handleConnectToBank = async (
   institutionId: string | null
 ): Promise<object | any> =>
   await connector(`${API_URL}/api/v1/access/connect-bank`, {
     method: 'POST',
     data: { institutionId },
+    authHeader: authorization,
   });
 
 const ingestAccounts = async (
@@ -18,7 +25,7 @@ const ingestAccounts = async (
   await connector(`${API_URL}/api/v1/access/callback`, {
     method: 'POST',
     data: { requisitionId: refOrRequisitionId },
-    authHeader: authorizationHeader()
+    authHeader: authorization,
   });
 
 export const service = {

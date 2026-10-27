@@ -339,7 +339,7 @@ const Dashboard: FC = () => {
                   </TransactionRow>
                 ))}
                 <span>
-                  <a href={`/view-transactions/${accountId}`}>
+                  <a href={`/transactions/${accountId}`}>
                     View all Transactions
                   </a>
                 </span>
