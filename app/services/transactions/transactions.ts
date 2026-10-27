@@ -9,8 +9,8 @@ const url = 'http://localhost:8083' as string;
 
 const getTransactions = async (
   accountId: string,
-  currentPage = 1,
-  limit = 10
+  currentPage: number,
+  limit = 20
 ): Promise<TransactionsProps> => {
   let response: TransactionsProps;
 

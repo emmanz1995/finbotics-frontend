@@ -12,6 +12,7 @@ import {
   ERROR,
 } from './transactions.styled';
 import { transactionsService } from '@/app/services/transactions/transactions';
+import Pagination from '@/app/components/molecules/pagination';
 
 export interface TransactionProps {
   id: string;
@@ -43,8 +44,8 @@ const Transactions = () => {
     },
     transactions: [],
   });
-  const [message, setMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [message, setMessage] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(4);
 
   const router = useRouter();
   const params = useParams();
@@ -55,7 +56,7 @@ const Transactions = () => {
 
     const retrieveTransactions = async () => {
       const { pagination, transactions } =
-        await transactionsService.getTransactions(accountId);
+        await transactionsService.getTransactions(accountId, currentPage);
 
       if (transactions.length === 0) {
         setMessage('No transactions found.');
@@ -68,9 +69,17 @@ const Transactions = () => {
     };
 
     void retrieveTransactions();
-  }, [accountId]);
+  }, [accountId, currentPage]);
+
+  const handleChangePage = (evt: any, pageNumber: number)=> {
+    evt.preventDefault();
+    setCurrentPage(pageNumber);
+  };
 
   console.log('...state transactions', transactionState);
+  const totalPages = transactionState.pagination.totalPages as number;
+  console.log('totalPages', totalPages);
+
   return (
     <Layout>
       <>
@@ -106,6 +115,7 @@ const Transactions = () => {
               )
             )}
           </TransactionsTable>
+          <Pagination totalPages={totalPages} handleChangePage={handleChangePage} />
         </TransactionsContent>
       </>
     </Layout>
