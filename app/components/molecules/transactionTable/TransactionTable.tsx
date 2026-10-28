@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { EditIcon } from 'lucide-react';
 import {
   TransactionsTable,
   TransactionsTableContent,
@@ -6,35 +7,26 @@ import {
   TransactionsTableRow,
 } from '@/app/transactions/[id]/transactions.styled';
 import Input from '@/app/components/atoms/input';
-import { EditIcon } from 'lucide-react';
 import { TransactionProps } from '@/app/transactions/[id]/page';
+import { transactionsService } from '@/app/services/transactions/transactions';
 
 const TransactionTable: FC<{
   transactionState: any;
-  showHideTextbox: any;
-  setShowHideTextbox: any;
-}> = ({ transactionState, showHideTextbox, setShowHideTextbox }) => {
-  const [selectedId, setSelectedId] = useState<string | null>('');
+}> = ({ transactionState }) => {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const selectTransactionRow = (id: string) => {
     setSelectedId(prevId => (prevId === id ? null : id));
   };
   return (
     <TransactionsTable>
-      <TransactionsTableRow>
-        <TransactionsTableHead>Descriptions</TransactionsTableHead>
-        <TransactionsTableHead>Amount</TransactionsTableHead>
-        <TransactionsTableHead>Category</TransactionsTableHead>
-        <TransactionsTableHead>Trx Actions</TransactionsTableHead>
-      </TransactionsTableRow>
+      <TableHeadRow />
       {transactionState.transactions.map((transaction: TransactionProps) => (
         <>
           <TableContentRow
             transaction={transaction}
-            showHideTextbox={showHideTextbox}
-            setShowHideTextbox={setShowHideTextbox}
+            isEditing={transaction.id === selectedId}
             onSelectTransaction={selectTransactionRow}
-            selectedId={selectedId}
           />
         </>
       ))}
@@ -42,33 +34,38 @@ const TransactionTable: FC<{
   );
 };
 
+const TableHeadRow = () => (
+  <TransactionsTableRow>
+    <TransactionsTableHead>Descriptions</TransactionsTableHead>
+    <TransactionsTableHead>Amount</TransactionsTableHead>
+    <TransactionsTableHead>Category</TransactionsTableHead>
+    <TransactionsTableHead>Comments</TransactionsTableHead>
+    <TransactionsTableHead>Trx Actions</TransactionsTableHead>
+  </TransactionsTableRow>
+);
+
 const TableContentRow: FC<{
   transaction: TransactionProps;
-  showHideTextbox: any;
-  setShowHideTextbox: any;
-  onSelectTransaction: any;
-  selectedId: string | null;
-}> = ({
-  transaction,
-  showHideTextbox,
-  setShowHideTextbox,
-  onSelectTransaction,
-  selectedId
-}) => {
-  const handleSelectTransactionToEdit = (id: string) => {
-    onSelectTransaction(id);
-    console.log('...id',id);
-    console.log('...is true', selectedId === id);
-    if (selectedId === id) {
-      console.log('...got in here');
-      setShowHideTextbox(!showHideTextbox)
+  isEditing: boolean;
+  onSelectTransaction: (id: string) => void;
+}> = ({ transaction, isEditing, onSelectTransaction }) => {
+  const [category, setCategory] = useState<string | null>(null);
+
+  const handleUpdateCategory = async (evt: any, id: string) => {
+    evt.preventDefault()
+
+    const body = {
+      id,
+      category
     }
+
+    const response = await transactionsService.onUpdateTransaction(body)
+
+    console.log('...response', response);
   }
 
-  console.log(selectedId);
   return (
     <>
-      {/*{isSelected && (*/}
       <TransactionsTableRow key={transaction.id}>
         <>
           <TransactionsTableContent>
@@ -78,20 +75,30 @@ const TableContentRow: FC<{
             {transaction.amount}
           </TransactionsTableContent>
           <TransactionsTableContent>
-            {showHideTextbox ? (
-              <Input placeholder="Update Category" />
+            {isEditing ? (
+              <form
+                onSubmit={(evt: any) =>
+                  handleUpdateCategory(evt, transaction.id)
+                }
+              >
+                <Input
+                  type="text"
+                  name="category"
+                  value={category}
+                  placeholder={transaction?.category}
+                  onChange={evt => setCategory(evt.target.value.toUpperCase())}
+                />
+              </form>
             ) : (
               <p>{transaction.category}</p>
             )}
           </TransactionsTableContent>
+          <TransactionsTableContent>{transaction?.comments}</TransactionsTableContent>
           <TransactionsTableContent>
-            <EditIcon
-              onClick={() => handleSelectTransactionToEdit(transaction.id)}
-            />
+            <EditIcon onClick={() => onSelectTransaction(transaction.id)} />
           </TransactionsTableContent>
         </>
       </TransactionsTableRow>
-      {/*)}*/}
     </>
   );
 };

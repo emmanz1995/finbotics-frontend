@@ -27,6 +27,7 @@ export interface TransactionProps {
   metadata: object;
   accountDetailsId: string;
   category: string;
+  comments: string;
 }
 export interface Pagination {
   totalPages: number;
@@ -54,7 +55,6 @@ const Transactions = () => {
     username: string;
     userId: string;
   } | null>(null);
-  const [showHideTextbox, setShowHideTextbox] = useState<boolean>(false);
 
   const router = useRouter();
   const params = useParams();
@@ -115,11 +115,7 @@ const Transactions = () => {
           <ERROR>{message && <h5>{message}</h5>}</ERROR>
         </TransactionsHeaders>
         <TransactionsContent>
-          <TransactionTable
-            transactionState={transactionState}
-            showHideTextbox={showHideTextbox}
-            setShowHideTextbox={setShowHideTextbox}
-          />
+          <TransactionTable transactionState={transactionState} />
           <Pagination
             totalPages={totalPages}
             handleChangePage={handleChangePage}
