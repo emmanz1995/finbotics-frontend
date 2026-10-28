@@ -52,17 +52,17 @@ const TableContentRow: FC<{
   const [category, setCategory] = useState<string | null>(null);
 
   const handleUpdateCategory = async (evt: any, id: string) => {
-    evt.preventDefault()
+    evt.preventDefault();
 
     const body = {
       id,
-      category
-    }
+      category,
+    };
 
-    const response = await transactionsService.onUpdateTransaction(body)
+    const response = await transactionsService.onUpdateTransaction(body);
 
     console.log('...response', response);
-  }
+  };
 
   return (
     <>
@@ -93,7 +93,9 @@ const TableContentRow: FC<{
               <p>{transaction.category}</p>
             )}
           </TransactionsTableContent>
-          <TransactionsTableContent>{transaction?.comments}</TransactionsTableContent>
+          <TransactionsTableContent>
+            {transaction?.comments}
+          </TransactionsTableContent>
           <TransactionsTableContent>
             <EditIcon onClick={() => onSelectTransaction(transaction.id)} />
           </TransactionsTableContent>
