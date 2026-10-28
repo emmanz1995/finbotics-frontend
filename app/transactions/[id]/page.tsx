@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { EditIcon } from 'lucide-react';
 import Layout from '@/app/components/template';
 import {
   TransactionsHeaders,
@@ -13,6 +14,9 @@ import {
 } from './transactions.styled';
 import { transactionsService } from '@/app/services/transactions/transactions';
 import Pagination from '@/app/components/molecules/pagination';
+import { authService } from '@/app/services/auth';
+import Input from '@/app/components/atoms/input';
+import { TransactionTable } from '@/app/components/molecules/transactionTable';
 
 export interface TransactionProps {
   id: string;
@@ -45,7 +49,12 @@ const Transactions = () => {
     transactions: [],
   });
   const [message, setMessage] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(4);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentUser, setCurrentUser] = useState<{
+    username: string;
+    userId: string;
+  } | null>(null);
+  const [showHideTextbox, setShowHideTextbox] = useState<boolean>(false);
 
   const router = useRouter();
   const params = useParams();
@@ -71,7 +80,7 @@ const Transactions = () => {
     void retrieveTransactions();
   }, [accountId, currentPage]);
 
-  const handleChangePage = (evt: any, pageNumber: number)=> {
+  const handleChangePage = (evt: any, pageNumber: number): void => {
     evt.preventDefault();
     setCurrentPage(pageNumber);
   };
@@ -80,8 +89,25 @@ const Transactions = () => {
   const totalPages = transactionState.pagination.totalPages as number;
   console.log('totalPages', totalPages);
 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const accessToken = JSON.parse(
+          localStorage.getItem('access_token') as string
+        ).access_token;
+        const userDetails = authService.extractCurrentUser(accessToken);
+
+        setCurrentUser(userDetails);
+      } catch (err: any) {
+        console.log(err);
+      }
+    };
+
+    void getCurrentUser();
+  }, []);
+
   return (
-    <Layout>
+    <Layout userInfo={currentUser}>
       <>
         <TransactionsHeaders>
           <h1>Transactions</h1>
@@ -89,33 +115,15 @@ const Transactions = () => {
           <ERROR>{message && <h5>{message}</h5>}</ERROR>
         </TransactionsHeaders>
         <TransactionsContent>
-          <TransactionsTable>
-            <TransactionsTableRow>
-              <TransactionsTableHead>Descriptions</TransactionsTableHead>
-              <TransactionsTableHead>Amount</TransactionsTableHead>
-              <TransactionsTableHead>Category</TransactionsTableHead>
-              <TransactionsTableHead></TransactionsTableHead>
-            </TransactionsTableRow>
-            {transactionState.transactions.map(
-              (transaction: TransactionProps) => (
-                <TransactionsTableRow key={transaction.id}>
-                  <>
-                    <TransactionsTableContent>
-                      {transaction.details}
-                    </TransactionsTableContent>
-                    <TransactionsTableContent>
-                      {transaction.amount}
-                    </TransactionsTableContent>
-                    <TransactionsTableContent>
-                      {transaction.category}
-                    </TransactionsTableContent>
-                    {/*<TransactionsTableContent></TransactionsTableContent>*/}
-                  </>
-                </TransactionsTableRow>
-              )
-            )}
-          </TransactionsTable>
-          <Pagination totalPages={totalPages} handleChangePage={handleChangePage} />
+          <TransactionTable
+            transactionState={transactionState}
+            showHideTextbox={showHideTextbox}
+            setShowHideTextbox={setShowHideTextbox}
+          />
+          <Pagination
+            totalPages={totalPages}
+            handleChangePage={handleChangePage}
+          />
         </TransactionsContent>
       </>
     </Layout>
