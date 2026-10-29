@@ -1,5 +1,8 @@
-import { type FC, useState } from 'react';
-import { EditIcon } from 'lucide-react';
+'use client';
+
+import { type ChangeEvent, type FC, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { EditIcon, ViewIcon, SearchCheck } from 'lucide-react';
 import {
   TransactionsTable,
   TransactionsTableContent,
@@ -9,9 +12,12 @@ import {
 import Input from '@/app/components/atoms/input';
 import { TransactionProps } from '@/app/transactions/[id]/page';
 import { transactionsService } from '@/app/services/transactions/transactions';
+import Modal from '@/app/components/molecules/modal/Modal';
 
 const TransactionTable: FC<{
   transactionState: any;
+  onSelectTransactionToView: (id: any) => void;
+  selectTransaction: string | null;
 }> = ({ transactionState }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -50,8 +56,12 @@ const TableContentRow: FC<{
   onSelectTransaction: (id: string) => void;
 }> = ({ transaction, isEditing, onSelectTransaction }) => {
   const [category, setCategory] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleUpdateCategory = async (evt: any, id: string) => {
+  const handleUpdateCategory = async (
+    evt: ChangeEvent<HTMLInputElement>,
+    id: string
+  ): Promise<void> => {
     evt.preventDefault();
 
     const body = {
@@ -60,13 +70,12 @@ const TableContentRow: FC<{
     };
 
     const response = await transactionsService.onUpdateTransaction(body);
-
     console.log('...response', response);
   };
 
   return (
     <>
-      <TransactionsTableRow key={transaction.id}>
+      <TransactionsTableRow key={transaction?.id}>
         <>
           <TransactionsTableContent>
             {transaction.details}
@@ -86,7 +95,9 @@ const TableContentRow: FC<{
                   name="category"
                   value={category}
                   placeholder={transaction?.category}
-                  onChange={evt => setCategory(evt.target.value.toUpperCase())}
+                  onChange={(evt: ChangeEvent<HTMLInputElement>): void =>
+                    setCategory(evt.target.value.toUpperCase())
+                  }
                 />
               </form>
             ) : (
@@ -97,7 +108,16 @@ const TableContentRow: FC<{
             {transaction?.comments}
           </TransactionsTableContent>
           <TransactionsTableContent>
-            <EditIcon onClick={() => onSelectTransaction(transaction.id)} />
+            <EditIcon
+              onClick={() => onSelectTransaction(transaction.id)}
+              cursor="pointer"
+            />{' '}
+            <ViewIcon
+              cursor="pointer"
+              onClick={() =>
+                router.push(`/transactions/view/${transaction.id}`)
+              }
+            />
           </TransactionsTableContent>
         </>
       </TransactionsTableRow>

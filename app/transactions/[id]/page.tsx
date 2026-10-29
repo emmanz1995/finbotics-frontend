@@ -17,6 +17,7 @@ import Pagination from '@/app/components/molecules/pagination';
 import { authService } from '@/app/services/auth';
 import Input from '@/app/components/atoms/input';
 import { TransactionTable } from '@/app/components/molecules/transactionTable';
+import Modal from '@/app/components/molecules/modal/Modal';
 
 export interface TransactionProps {
   id: string;
@@ -55,6 +56,9 @@ const Transactions = () => {
     username: string;
     userId: string;
   } | null>(null);
+  const [selectTransaction, setSelectTransaction] = useState<string | null>(
+    null
+  );
 
   const router = useRouter();
   const params = useParams();
@@ -106,16 +110,25 @@ const Transactions = () => {
     void getCurrentUser();
   }, []);
 
+  const selectTransactionRow = (id: string) => {
+    setSelectTransaction(prevId => (prevId === id ? null : id));
+  };
+
   return (
     <Layout userInfo={currentUser}>
       <>
+        {/*<Modal>ddf</Modal>*/}
         <TransactionsHeaders>
           <h1>Transactions</h1>
           <h5>See all your transactions in one place</h5>
           <ERROR>{message && <h5>{message}</h5>}</ERROR>
         </TransactionsHeaders>
         <TransactionsContent>
-          <TransactionTable transactionState={transactionState} />
+          <TransactionTable
+            transactionState={transactionState}
+            onSelectTransactionToView={selectTransactionRow}
+            selectTransaction={selectTransaction}
+          />
           <Pagination
             totalPages={totalPages}
             handleChangePage={handleChangePage}
