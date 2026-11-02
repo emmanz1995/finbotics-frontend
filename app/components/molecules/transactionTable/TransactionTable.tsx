@@ -2,7 +2,11 @@
 
 import { type ChangeEvent, type FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { EditIcon, ViewIcon, SearchCheck } from 'lucide-react';
+import {
+  EditIcon,
+  ViewIcon,
+  // SearchCheck
+} from 'lucide-react';
 import {
   TransactionsTable,
   TransactionsTableContent,
@@ -12,7 +16,7 @@ import {
 import Input from '@/app/components/atoms/input';
 import { TransactionProps } from '@/app/transactions/[id]/page';
 import { transactionsService } from '@/app/services/transactions/transactions';
-import Modal from '@/app/components/molecules/modal/Modal';
+// import Modal from '@/app/components/molecules/modal/Modal';
 
 const TransactionTable: FC<{
   transactionState: any;
@@ -33,6 +37,7 @@ const TransactionTable: FC<{
             transaction={transaction}
             isEditing={transaction.id === selectedId}
             onSelectTransaction={selectTransactionRow}
+            transactions={transactionState?.transactions}
           />
         </>
       ))}
@@ -54,7 +59,8 @@ const TableContentRow: FC<{
   transaction: TransactionProps;
   isEditing: boolean;
   onSelectTransaction: (id: string) => void;
-}> = ({ transaction, isEditing, onSelectTransaction }) => {
+  transactions: TransactionProps[];
+}> = ({ transaction, isEditing, onSelectTransaction, transactions }) => {
   const [category, setCategory] = useState<string | null>(null);
   const router = useRouter();
 
@@ -69,8 +75,21 @@ const TableContentRow: FC<{
       category,
     };
 
-    const response = await transactionsService.onUpdateTransaction(body);
-    console.log('...response', response);
+    const result: any = await transactionsService.onUpdateTransaction(body);
+    console.log('...response', result.response);
+    console.log(transactions);
+    transactions.map(transaction => {
+      // For debugging purposes only
+      // console.log('...id boolean', transaction.id === result.response?.id);
+      // console.log('...transaction.id', result.response?.id);
+      // console.log('...id', id);
+      if (transaction.id === result.response?.id) {
+        return {
+          ...transaction,
+          category,
+        };
+      } else return transaction;
+    });
   };
 
   return (

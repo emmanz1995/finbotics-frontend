@@ -40,11 +40,13 @@ const onUpdateTransaction = async (body: {
   comment?: string;
 }) => {
   let response;
+  const { id, category } = body;
 
   try {
-    response = await connector(`${url}/api/v1/transactions/${body.id}`, {
+    response = await connector(`${url}/api/v1/transactions/${id}`, {
       method: 'PUT',
       authHeader: AuthorizationHeader,
+      data: { category },
     });
   } catch (err: any) {
     console.error('Failed to update transaction', err.message);
