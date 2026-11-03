@@ -15,20 +15,17 @@ import {
 } from '@/app/transactions/[id]/transactions.styled';
 import Input from '@/app/components/atoms/input';
 import { TransactionProps } from '@/app/transactions/[id]/page';
-import { transactionsService } from '@/app/services/transactions/transactions';
-// import Modal from '@/app/components/molecules/modal/Modal';
+// import { transactionsService } from '@/app/services/transactions/transactions';
+import { useSelectId } from '@/app/hooks';
 
 const TransactionTable: FC<{
   transactionState: any;
-  setTransactionState: any;
+  onHandleUpdateCategory: any;
   onSelectTransactionToView: (id: any) => void;
   selectTransaction: string | null;
-}> = ({ transactionState, setTransactionState }) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+}> = ({ transactionState, onHandleUpdateCategory }) => {
 
-  const selectTransactionRow = (id: string) => {
-    setSelectedId(prevId => (prevId === id ? null : id));
-  };
+  const { selectedId, chooseId: selectTransactionRow } = useSelectId();
   return (
     <TransactionsTable>
       <TableHeadRow />
@@ -38,8 +35,7 @@ const TransactionTable: FC<{
             transaction={transaction}
             isEditing={transaction.id === selectedId}
             onSelectTransaction={selectTransactionRow}
-            transactions={transactionState?.transactions}
-            setTransactionState={setTransactionState}
+            onHandleUpdateCategory={onHandleUpdateCategory}
           />
         </>
       ))}
@@ -61,58 +57,15 @@ const TableContentRow: FC<{
   transaction: TransactionProps;
   isEditing: boolean;
   onSelectTransaction: (id: string) => void;
-  transactions: TransactionProps[];
-  setTransactionState: any;
+  onHandleUpdateCategory: any;
 }> = ({
   transaction,
   isEditing,
   onSelectTransaction,
-  transactions,
-  setTransactionState,
+  onHandleUpdateCategory,
 }) => {
   const [category, setCategory] = useState<string | null>(null);
   const router = useRouter();
-
-  // TODO: Move this function to the main transaction page component this will help solve the prop drilling problem
-  const handleUpdateCategory = async (
-    evt: ChangeEvent<HTMLInputElement>,
-    id: string
-  ): Promise<void> => {
-    evt.preventDefault();
-
-    const body = {
-      id,
-      category,
-    };
-
-    const result: any = await transactionsService.onUpdateTransaction(body);
-    console.log('...response', result.response);
-    console.log(transactions);
-    const mutatedTransactions = transactions.map(transaction => {
-      // For debugging purposes only
-      // console.log('...id boolean', transaction.id === result.response?.id);
-      // console.log('...transaction.id', result.response?.id);
-      // console.log('...id', id);
-      if (transaction.id === result.response?.id) {
-        return {
-          ...transaction,
-          category,
-        };
-      }
-      return transaction;
-    });
-
-    setTransactionState({
-      transactions: mutatedTransactions,
-      // TODO: get the new pagination values and add them in here
-      pagination: {
-        transactionsPerPage: 20,
-        totalPages: 9,
-        page: 2,
-        offset: 0,
-      },
-    });
-  };
 
   return (
     <>
@@ -128,7 +81,7 @@ const TableContentRow: FC<{
             {isEditing ? (
               <form
                 onSubmit={(evt: any) =>
-                  handleUpdateCategory(evt, transaction.id)
+                  onHandleUpdateCategory(evt, transaction.id, category)
                 }
               >
                 <Input

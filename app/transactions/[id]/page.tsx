@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import type { ChangeEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { EditIcon } from 'lucide-react';
 import Layout from '@/app/components/template';
@@ -18,6 +19,7 @@ import { authService } from '@/app/services/auth';
 import Input from '@/app/components/atoms/input';
 import { TransactionTable } from '@/app/components/molecules/transactionTable';
 import Modal from '@/app/components/molecules/modal/Modal';
+import { useGetCurrentUser } from '@/app/hooks';
 
 export interface TransactionProps {
   id: string;
@@ -52,10 +54,6 @@ const Transactions = () => {
   });
   const [message, setMessage] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentUser, setCurrentUser] = useState<{
-    username: string;
-    userId: string;
-  } | null>(null);
   const [selectTransaction, setSelectTransaction] = useState<string | null>(
     null
   );
@@ -93,22 +91,47 @@ const Transactions = () => {
   const totalPages = transactionState.pagination.totalPages as number;
   console.log('totalPages', totalPages);
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const accessToken = JSON.parse(
-          localStorage.getItem('access_token') as string
-        ).access_token;
-        const userDetails = authService.extractCurrentUser(accessToken);
+  // TODO: Move this function to the main transaction page component this will help solve the prop drilling problem
+  const handleUpdateCategory = async (
+    evt: ChangeEvent<HTMLInputElement>,
+    id: string,
+    category: string
+  ): Promise<void> => {
+    evt.preventDefault();
 
-        setCurrentUser(userDetails);
-      } catch (err: any) {
-        console.log(err);
-      }
+    const body = {
+      id,
+      category,
     };
 
-    void getCurrentUser();
-  }, []);
+    const result: any = await transactionsService.onUpdateTransaction(body);
+    console.log('...response', result.response);
+    console.log(transactionState.transactions);
+    const mutatedTransactions: any = transactionState.transactions.map(
+      transaction => {
+        if (transaction.id === result.response?.id) {
+          return {
+            ...transaction,
+            category,
+          };
+        }
+        return transaction;
+      }
+    );
+
+    setTransactionState({
+      transactions: mutatedTransactions,
+      // TODO: get the new pagination values and add them in here
+      pagination: {
+        transactionsPerPage: transactionState.pagination.transactionsPerPage,
+        totalPages,
+        page: transactionState.pagination.page,
+        offset: transactionState.pagination.offset,
+      },
+    });
+  };
+
+  const { currentUser } = useGetCurrentUser();
 
   const selectTransactionRow = (id: string) => {
     setSelectTransaction(prevId => (prevId === id ? null : id));
@@ -128,7 +151,7 @@ const Transactions = () => {
             transactionState={transactionState}
             onSelectTransactionToView={selectTransactionRow}
             selectTransaction={selectTransaction}
-            setTransactionState={setTransactionState}
+            onHandleUpdateCategory={handleUpdateCategory}
           />
           <Pagination
             totalPages={totalPages}
@@ -138,6 +161,6 @@ const Transactions = () => {
       </>
     </Layout>
   );
-};
+};;
 
 export default Transactions;

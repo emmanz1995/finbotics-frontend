@@ -12,6 +12,7 @@ import { Heading, MainContainer, GridDisplay } from './onboard.styled';
 import Input from '@/app/components/atoms/input';
 import Pagination from '@/app/components/molecules/pagination';
 import pagination from '@/app/components/molecules/pagination';
+import { useGetCurrentUser } from '@/app/hooks';
 
 const OnBoard: FC = () => {
   const [institutions, setInstitutions] = useState<any[]>([]);
@@ -70,9 +71,11 @@ const OnBoard: FC = () => {
     }
   };
 
+  const { currentUser } = useGetCurrentUser();
+
   return (
     <div>
-      <Layout>
+      <Layout currentUser={currentUser}>
         <Heading>
           <h1>Connect Your Bank</h1>
           <p>
