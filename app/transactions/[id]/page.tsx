@@ -128,6 +128,7 @@ const Transactions = () => {
             transactionState={transactionState}
             onSelectTransactionToView={selectTransactionRow}
             selectTransaction={selectTransaction}
+            setTransactionState={setTransactionState}
           />
           <Pagination
             totalPages={totalPages}

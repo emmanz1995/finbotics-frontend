@@ -20,9 +20,10 @@ import { transactionsService } from '@/app/services/transactions/transactions';
 
 const TransactionTable: FC<{
   transactionState: any;
+  setTransactionState: any;
   onSelectTransactionToView: (id: any) => void;
   selectTransaction: string | null;
-}> = ({ transactionState }) => {
+}> = ({ transactionState, setTransactionState }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const selectTransactionRow = (id: string) => {
@@ -38,6 +39,7 @@ const TransactionTable: FC<{
             isEditing={transaction.id === selectedId}
             onSelectTransaction={selectTransactionRow}
             transactions={transactionState?.transactions}
+            setTransactionState={setTransactionState}
           />
         </>
       ))}
@@ -60,10 +62,18 @@ const TableContentRow: FC<{
   isEditing: boolean;
   onSelectTransaction: (id: string) => void;
   transactions: TransactionProps[];
-}> = ({ transaction, isEditing, onSelectTransaction, transactions }) => {
+  setTransactionState: any;
+}> = ({
+  transaction,
+  isEditing,
+  onSelectTransaction,
+  transactions,
+  setTransactionState,
+}) => {
   const [category, setCategory] = useState<string | null>(null);
   const router = useRouter();
 
+  // TODO: Move this function to the main transaction page component this will help solve the prop drilling problem
   const handleUpdateCategory = async (
     evt: ChangeEvent<HTMLInputElement>,
     id: string
@@ -78,7 +88,7 @@ const TableContentRow: FC<{
     const result: any = await transactionsService.onUpdateTransaction(body);
     console.log('...response', result.response);
     console.log(transactions);
-    transactions.map(transaction => {
+    const mutatedTransactions = transactions.map(transaction => {
       // For debugging purposes only
       // console.log('...id boolean', transaction.id === result.response?.id);
       // console.log('...transaction.id', result.response?.id);
@@ -88,7 +98,19 @@ const TableContentRow: FC<{
           ...transaction,
           category,
         };
-      } else return transaction;
+      }
+      return transaction;
+    });
+
+    setTransactionState({
+      transactions: mutatedTransactions,
+      // TODO: get the new pagination values and add them in here
+      pagination: {
+        transactionsPerPage: 20,
+        totalPages: 9,
+        page: 2,
+        offset: 0,
+      },
     });
   };
 
