@@ -24,7 +24,6 @@ const TransactionTable: FC<{
   onSelectTransactionToView: (id: any) => void;
   selectTransaction: string | null;
 }> = ({ transactionState, onHandleUpdateCategory }) => {
-
   const { selectedId, chooseId: selectTransactionRow } = useSelectId();
   return (
     <TransactionsTable>

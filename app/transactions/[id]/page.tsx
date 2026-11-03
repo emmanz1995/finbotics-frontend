@@ -161,6 +161,6 @@ const Transactions = () => {
       </>
     </Layout>
   );
-};;
+};
 
 export default Transactions;

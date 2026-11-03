@@ -170,7 +170,7 @@ const AccountsDashboard: FC = () => {
     setSelectedAccountId(prev => (prev === id ? null : id));
   }, []);
 
-  const { currentUser } = useGetCurrentUser()
+  const { currentUser } = useGetCurrentUser();
   return (
     <Layout userInfo={currentUser}>
       <ContentContainer>
