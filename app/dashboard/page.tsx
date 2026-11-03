@@ -43,6 +43,7 @@ import AccountCard from '@/app/components/molecules/accountCard';
 import { pickBalanceFields } from '@/app/helpers';
 import { AccountCardLoading } from '@/app/components/molecules/pulseEffects/accountCard';
 import AccountCardPulse from '@/app/components/molecules/pulseEffects/accountCard/AccountCardPulse';
+import { useGetCurrentUser } from '@/app/hooks';
 
 export interface BalanceToReturnProp {
   [key: string]: {
@@ -78,10 +79,6 @@ const AccountsDashboard: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>('');
   const [message, setMessage] = useState<string>('');
-  const [currentUser, setCurrentUser] = useState<{
-    username: string;
-    userId: string;
-  } | null>(null);
 
   const navigate = useRouter();
 
@@ -173,22 +170,7 @@ const AccountsDashboard: FC = () => {
     setSelectedAccountId(prev => (prev === id ? null : id));
   }, []);
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const accessToken = JSON.parse(
-          localStorage.getItem('access_token') as string
-        ).access_token;
-        const userDetails = authService.extractCurrentUser(accessToken);
-
-        setCurrentUser(userDetails);
-      } catch (err: any) {
-        console.log(err);
-      }
-    };
-
-    getCurrentUser();
-  }, []);
+  const { currentUser } = useGetCurrentUser()
   return (
     <Layout userInfo={currentUser}>
       <ContentContainer>

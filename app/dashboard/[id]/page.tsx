@@ -62,6 +62,7 @@ import {
 import { extractAccountNumber, toUppercaseFirstLetter } from '../../helpers';
 import Button from '../../components/atoms/button';
 import { service as predicationService } from '@/app/services/predictions';
+import { useGetCurrentUser } from '@/app/hooks';
 
 interface ResourceProps {
   id: string;
@@ -189,8 +190,10 @@ const Dashboard: FC = () => {
     }
   };
 
+  const { currentUser } = useGetCurrentUser();
+
   return (
-    <Layout>
+    <Layout userInfo={currentUser}>
       <ContentContainer>
         <HeaderContent>
           <Button variant="ghost" onClick={() => navigate.push('/dashboard')}>
