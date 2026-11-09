@@ -12,9 +12,9 @@ import {
   TransactionsTableContent,
   TransactionsTableHead,
   TransactionsTableRow,
-} from '@/app/transactions/[id]/transactions.styled';
+} from '@/app/transactions/[accountId]/transactions.styled';
 import Input from '@/app/components/atoms/input';
-import { TransactionProps } from '@/app/transactions/[id]/page';
+import { TransactionProps } from '@/app/transactions/[accountId]/page';
 // import { transactionsService } from '@/app/services/transactions/transactions';
 import { useSelectId } from '@/app/hooks';
 
@@ -108,7 +108,9 @@ const TableContentRow: FC<{
             <ViewIcon
               cursor="pointer"
               onClick={() =>
-                router.push(`/transactions/view/${transaction.id}`)
+                router.push(
+                  `/transactions/${transaction.accountDetailsId}/view/${transaction.id}`
+                )
               }
             />
           </TransactionsTableContent>

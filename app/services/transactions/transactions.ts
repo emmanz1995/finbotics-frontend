@@ -1,6 +1,6 @@
 import { connector } from '@/app/connector';
 import { authorizationHeader } from '@/app/helpers';
-import { TransactionsProps } from '@/app/transactions/[id]/page';
+import { TransactionsProps } from '@/app/transactions/[accountId]/page';
 
 // TODO: there is a bug with this, we keep geeting the undefined keyword in the url, FIX IT
 // const { REACT_APP_API_URL } = process.env;

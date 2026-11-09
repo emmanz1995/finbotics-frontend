@@ -60,7 +60,7 @@ const Transactions = () => {
 
   const router = useRouter();
   const params = useParams();
-  const accountId = params.id as string;
+  const accountId = params.accountId as string;
 
   useEffect(() => {
     if (!accountId) return;
@@ -86,12 +86,8 @@ const Transactions = () => {
     evt.preventDefault();
     setCurrentPage(pageNumber);
   };
-
-  console.log('...state transactions', transactionState);
   const totalPages = transactionState.pagination.totalPages as number;
-  console.log('totalPages', totalPages);
 
-  // TODO: Move this function to the main transaction page component this will help solve the prop drilling problem
   const handleUpdateCategory = async (
     evt: ChangeEvent<HTMLInputElement>,
     id: string,
@@ -105,8 +101,6 @@ const Transactions = () => {
     };
 
     const result: any = await transactionsService.onUpdateTransaction(body);
-    console.log('...response', result.response);
-    console.log(transactionState.transactions);
     const mutatedTransactions: any = transactionState.transactions.map(
       transaction => {
         if (transaction.id === result.response?.id) {
@@ -140,7 +134,6 @@ const Transactions = () => {
   return (
     <Layout userInfo={currentUser}>
       <>
-        {/*<Modal>ddf</Modal>*/}
         <TransactionsHeaders>
           <h1>Transactions</h1>
           <h5>See all your transactions in one place</h5>

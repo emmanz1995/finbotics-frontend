@@ -85,7 +85,7 @@ describe('when card renders', () => {
       push: jest.fn(),
     };
     const mockHandleGetAccountId = jest.fn();
-    it('should move user to the [id] dashboard page', async () => {
+    it('should move user to the [accountId] dashboard page', async () => {
       render(
         <AccountCard
           detail={props.detail}
